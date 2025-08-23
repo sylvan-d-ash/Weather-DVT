@@ -6,6 +6,11 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		04DCD2DE2E59F6FE00216A0D /* SwiftLintFramework in Frameworks */ = {isa = PBXBuildFile; productRef = 04DCD2DD2E59F6FE00216A0D /* SwiftLintFramework */; };
+		04DCD2E02E59F6FE00216A0D /* swiftlint in Frameworks */ = {isa = PBXBuildFile; productRef = 04DCD2DF2E59F6FE00216A0D /* swiftlint */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		04DCD2A62E59EA7700216A0D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -52,6 +57,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04DCD2DE2E59F6FE00216A0D /* SwiftLintFramework in Frameworks */,
+				04DCD2E02E59F6FE00216A0D /* swiftlint in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,6 +119,8 @@
 			);
 			name = "Weather-DVT";
 			packageProductDependencies = (
+				04DCD2DD2E59F6FE00216A0D /* SwiftLintFramework */,
+				04DCD2DF2E59F6FE00216A0D /* swiftlint */,
 			);
 			productName = "Weather-DVT";
 			productReference = 04DCD2972E59EA7500216A0D /* Weather-DVT.app */;
@@ -195,6 +204,9 @@
 			);
 			mainGroup = 04DCD28E2E59EA7500216A0D;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				04DCD2DC2E59F6FE00216A0D /* XCRemoteSwiftPackageReference "SwiftLint" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 04DCD2982E59EA7500216A0D /* Products */;
 			projectDirPath = "";
@@ -583,6 +595,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		04DCD2DC2E59F6FE00216A0D /* XCRemoteSwiftPackageReference "SwiftLint" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/realm/SwiftLint";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.59.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		04DCD2DD2E59F6FE00216A0D /* SwiftLintFramework */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 04DCD2DC2E59F6FE00216A0D /* XCRemoteSwiftPackageReference "SwiftLint" */;
+			productName = SwiftLintFramework;
+		};
+		04DCD2DF2E59F6FE00216A0D /* swiftlint */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 04DCD2DC2E59F6FE00216A0D /* XCRemoteSwiftPackageReference "SwiftLint" */;
+			productName = swiftlint;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 04DCD28F2E59EA7500216A0D /* Project object */;
 }
