@@ -23,7 +23,7 @@ protocol NetworkService {
 }
 
 final class URLSessionNetworkService: NetworkService {
-    private let baseURLString = ""
+    private let baseURLString = "https://api.openweathermap.org"
 
     private static var apiKey: String {
         guard let key = Bundle.main.infoDictionary?["API_KEY"] as? String else {

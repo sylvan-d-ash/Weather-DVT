@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		04DCD3092E5B71CB00216A0D /* secrets.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 04DCD3082E5B71CB00216A0D /* secrets.xcconfig */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		04DCD2A62E59EA7700216A0D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -27,6 +31,7 @@
 		04DCD2972E59EA7500216A0D /* Weather-DVT.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Weather-DVT.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		04DCD2A52E59EA7700216A0D /* Weather-DVTTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Weather-DVTTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		04DCD2AF2E59EA7700216A0D /* Weather-DVTUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Weather-DVTUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		04DCD3082E5B71CB00216A0D /* secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = secrets.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -75,6 +80,7 @@
 		04DCD28E2E59EA7500216A0D = {
 			isa = PBXGroup;
 			children = (
+				04DCD3082E5B71CB00216A0D /* secrets.xcconfig */,
 				04DCD2992E59EA7500216A0D /* Weather-DVT */,
 				04DCD2A82E59EA7700216A0D /* Weather-DVTTests */,
 				04DCD2B22E59EA7700216A0D /* Weather-DVTUITests */,
@@ -215,6 +221,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04DCD3092E5B71CB00216A0D /* secrets.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -274,6 +281,7 @@
 /* Begin XCBuildConfiguration section */
 		04DCD2B72E59EA7700216A0D /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 04DCD3082E5B71CB00216A0D /* secrets.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -335,6 +343,7 @@
 		};
 		04DCD2B82E59EA7700216A0D /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 04DCD3082E5B71CB00216A0D /* secrets.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
