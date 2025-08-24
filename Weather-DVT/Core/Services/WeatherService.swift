@@ -34,7 +34,7 @@ enum WeatherEndpoint: APIEndpoint {
 
 protocol WeatherService: AnyObject {
     func fetchCurrentWeather() async -> Result<Weather, Error>
-    func fetch5DaysForecast() async -> Result<String, Error> // TODO
+    func fetch5DaysForecast() async -> Result<Forecast, Error>
 }
 
 final class DefaultWeatherService: WeatherService {
@@ -55,7 +55,14 @@ final class DefaultWeatherService: WeatherService {
         }
     }
 
-    func fetch5DaysForecast() async -> Result<String, Error> {
-        return await networkService.fetch(String.self, endpoint: WeatherEndpoint.forecast5Days)
+    func fetch5DaysForecast() async -> Result<Forecast, Error> {
+        let result = await networkService.fetch(Forecast5DaysResponse.self, endpoint: WeatherEndpoint.forecast5Days)
+
+        switch result {
+        case .success(let response):
+            return .success(response.toDomain())
+        case .failure(let error):
+            return .failure(error)
+        }
     }
 }

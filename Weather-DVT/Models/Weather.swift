@@ -11,6 +11,6 @@ struct Weather {
     let date: Date
     let condition: String
     let currentTemperature: Double
-    let minTemperatur: Double?
+    let minTemperature: Double?
     let maxTemperature: Double?
 }
