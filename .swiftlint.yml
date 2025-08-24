@@ -15,7 +15,6 @@ opt_in_rules:
   - redundant_nil_coalescing       # disallow redundant nil coalescing
   - sorted_first_last              # use 'array.min()' or 'array.max()' instead of 'array.sorted().first' or 'array.sorted().last'
   - unused_enumerated              # warn when 'enumerated()' is used but the index is not referenced
-  - unused_imports                 # warn about unused imports
 
 # Paths to include during linting
 included:
