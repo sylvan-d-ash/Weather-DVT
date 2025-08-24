@@ -38,7 +38,7 @@ struct CurrentWeatherResponse: Decodable {
             date: Date(timeIntervalSince1970: date),
             condition: weather.main,
             currentTemperature: main.temp,
-            minTemperatur: main.min,
+            minTemperature: main.min,
             maxTemperature: main.max
         )
     }
@@ -52,4 +52,12 @@ struct Forecast5DaysResponse: Decodable {
 
     let city: City
     let list: [CurrentWeatherResponse]
+
+    func toDomain() -> Forecast {
+        Forecast(
+            date: .now,
+            city: city.name,
+            list: list.map { $0.toDomain() }
+        )
+    }
 }
