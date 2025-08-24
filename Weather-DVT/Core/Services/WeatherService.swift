@@ -8,11 +8,10 @@
 import Foundation
 
 enum WeatherEndpoint: APIEndpoint {
-    case current
-    case forecast5Days
+    case current(lat: Double, lon: Double)
+    case forecast5Days(lat: Double, lon: Double)
 
     var path: String {
-        // TODO
         switch self {
         case .current:
             return "/data/2.5/weather"
@@ -22,19 +21,20 @@ enum WeatherEndpoint: APIEndpoint {
     }
 
     var parameters: [String : Any]? {
-        // TODO
         switch self {
-        case .current:
-            return ["q": "Paris"]
-        case .forecast5Days:
-            return ["q": "Paris"]
+        case .current(let lat, let lon), .forecast5Days(let lat, let lon):
+            return [
+                "lat": lat,
+                "lon": lon,
+                "units": "metric", // TODO: make dynamic later
+            ]
         }
     }
 }
 
 protocol WeatherService: AnyObject {
-    func fetchCurrentWeather() async -> Result<Weather, Error>
-    func fetch5DaysForecast() async -> Result<Forecast, Error>
+    func fetchCurrentWeather(lat: Double, lon: Double) async -> Result<Weather, Error>
+    func fetch5DaysForecast(lat: Double, lon: Double) async -> Result<Forecast, Error>
 }
 
 final class DefaultWeatherService: WeatherService {
@@ -44,8 +44,11 @@ final class DefaultWeatherService: WeatherService {
         self.networkService = networkService
     }
 
-    func fetchCurrentWeather() async -> Result<Weather, Error> {
-        let result = await networkService.fetch(CurrentWeatherResponse.self ,endpoint: WeatherEndpoint.current)
+    func fetchCurrentWeather(lat: Double, lon: Double) async -> Result<Weather, Error> {
+        let result = await networkService.fetch(
+            CurrentWeatherResponse.self,
+            endpoint: WeatherEndpoint.current(lat: lat, lon: lon)
+        )
 
         switch result {
         case .success(let response):
@@ -55,8 +58,11 @@ final class DefaultWeatherService: WeatherService {
         }
     }
 
-    func fetch5DaysForecast() async -> Result<Forecast, Error> {
-        let result = await networkService.fetch(Forecast5DaysResponse.self, endpoint: WeatherEndpoint.forecast5Days)
+    func fetch5DaysForecast(lat: Double, lon: Double) async -> Result<Forecast, Error> {
+        let result = await networkService.fetch(
+            Forecast5DaysResponse.self,
+            endpoint: WeatherEndpoint.forecast5Days(lat: lat, lon: lon)
+        )
 
         switch result {
         case .success(let response):
