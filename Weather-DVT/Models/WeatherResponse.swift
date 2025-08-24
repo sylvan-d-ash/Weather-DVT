@@ -7,11 +7,11 @@
 
 import Foundation
 
-private struct Weather: Decodable {
+private struct WeatherResponse: Decodable {
     let main: String
 }
 
-private struct Main: Decodable {
+private struct MainResponse: Decodable {
     let temp: Double
     let max: Double?
     let min: Double?
@@ -24,13 +24,23 @@ private struct Main: Decodable {
 }
 
 struct CurrentWeatherResponse: Decodable {
-    fileprivate let weather: Weather
-    fileprivate let main: Main
+    fileprivate let weather: WeatherResponse
+    fileprivate let main: MainResponse
     let date: TimeInterval
 
     private enum CodingKeys: String, CodingKey {
         case weather, main
         case date = "dt"
+    }
+
+    func toDomain() -> Weather {
+        Weather(
+            date: Date(timeIntervalSince1970: date),
+            condition: weather.main,
+            currentTemperature: main.temp,
+            minTemperatur: main.min,
+            maxTemperature: main.max
+        )
     }
 }
 
