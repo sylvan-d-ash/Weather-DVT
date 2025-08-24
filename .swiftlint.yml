@@ -1,0 +1,45 @@
+# Rules to disable (only the truly noisy ones)
+disabled_rules:
+  - todo                            # allow TODO comments without warnings
+
+# Opt-in rules (stronger enforcement)
+opt_in_rules:
+  - closure_spacing                # require consistent spacing inside closure braces
+  - empty_count                    # use .isEmpty instead of count == 0
+  - fatal_error_message            # require a message for fatal errors
+  - force_try                      # disallow 'try!' expressions
+  - first_where                    # prefer 'first(where:)' instead of 'filter(...).first'
+  - force_unwrapping               # disallow force unwrapping
+  - joined_default_parameter       # disallow joined default parameters
+  - prefer_self_in_static_references # use 'Self.staticMethod()' instead of 'MyType.staticMethod()'
+  - redundant_nil_coalescing       # disallow redundant nil coalescing
+  - sorted_first_last              # use 'array.min()' or 'array.max()' instead of 'array.sorted().first' or 'array.sorted().last'
+  - unused_enumerated              # warn when 'enumerated()' is used but the index is not referenced
+  - unused_imports                 # warn about unused imports
+
+# Paths to include during linting
+included:
+  - Weather-DVT
+
+# Rule-specific configurations
+line_length:
+  warning: 120
+  ignores_comments: true
+  ignores_function_declarations: true
+  ignores_interpolated_strings: true
+  ignores_urls: true
+
+identifier_name:
+  min_length: 3
+  excluded:
+    - id
+    - url
+    - x
+    - y
+    - i
+    - j
+
+force_cast: error
+force_unwrapping: error
+
+reporter: "xcode"
