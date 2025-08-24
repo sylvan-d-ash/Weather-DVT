@@ -19,7 +19,7 @@ enum NetworkError: Error {
 }
 
 protocol NetworkService {
-    func fetch<T: Decodable>(_ endpoint: APIEndpoint) async -> Result<T, Error>
+    func fetch<T: Decodable>(_ type: T.Type, endpoint: APIEndpoint) async -> Result<T, Error>
 }
 
 final class URLSessionNetworkService: NetworkService {
@@ -32,7 +32,7 @@ final class URLSessionNetworkService: NetworkService {
         return key
     }
 
-    func fetch<T: Decodable>(_ endpoint: APIEndpoint) async -> Result<T, Error> {
+    func fetch<T: Decodable>(_ type: T.Type, endpoint: APIEndpoint) async -> Result<T, Error> {
         guard var url = URL(string: baseURLString) else {
             return .failure(NetworkError.invalidURL)
         }
