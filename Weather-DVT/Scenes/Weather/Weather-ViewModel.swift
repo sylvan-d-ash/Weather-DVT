@@ -20,11 +20,11 @@ extension WeatherView {
         @Published private(set) var errorMessage: String?
 
         var backgroundColor: Color {
-            weather?.condition.backgroundColor ?? .sunny
+            weather?.condition.backgroundColor(base: selectedTheme.base) ?? .rainy
         }
 
         var backgroundImage: String {
-            weather?.condition.backgroundImage(base: selectedTheme.base) ?? "forest_sunny"
+            weather?.condition.backgroundImage(base: selectedTheme.base) ?? "forest_rainy"
         }
 
         private let service: WeatherService
