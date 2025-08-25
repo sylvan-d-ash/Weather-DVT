@@ -25,18 +25,19 @@ struct CurrentWeatherRow: View {
 }
 
 struct ForecastRow: View {
-    let day: String
+    let day: Date
     let icon: String
     let temp: String
 
     var body: some View {
         HStack {
-            Text(day)
+            Text(day.formatted(Date.FormatStyle().weekday(.wide)))
                 .frame(maxWidth: .infinity, alignment: .leading)
 
             Image(icon)
                 .resizable()
-                .frame(width: 25, alignment: .center)
+                .scaledToFit()
+                .frame(width: 25, height: 25, alignment: .center)
 
             Text(temp)
                 .frame(maxWidth: .infinity, alignment: .trailing)
@@ -58,11 +59,11 @@ struct WeatherView: View {
                     ProgressView()
                         .tint(.white)
                         .frame(maxWidth: .infinity)
-                } else if let forecast = viewModel.forecast {
+                } else if !viewModel.dailySummaries.isEmpty {
                     Group {
-                        ForEach(forecast.list) { weather in
+                        ForEach(viewModel.dailySummaries) { weather in
                             ForecastRow(
-                                day: weather.date.formatted(Date.FormatStyle().weekday()),
+                                day: weather.date,
                                 icon: weather.condition.icon,
                                 temp: viewModel.formatTemperature(weather.currentTemperature)
                             )
@@ -80,7 +81,7 @@ struct WeatherView: View {
             .background(.sunny)
         }
         .task {
-//            await viewModel.loadWeather()
+            await viewModel.loadWeather()
         }
     }
 
