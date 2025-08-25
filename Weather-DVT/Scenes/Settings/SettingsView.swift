@@ -35,20 +35,23 @@ struct SettingsView: View {
     var selectedTheme: Theme = .forest
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            Text("Theme")
-                .font(.headline)
-
-            VStack(spacing: 12) {
-                ForEach(Theme.allCases) { theme in
-                    themeButton(for: theme)
+        NavigationStack {
+            VStack(alignment: .leading, spacing: 16) {
+                Text("Theme")
+                    .font(.headline)
+                
+                VStack(spacing: 12) {
+                    ForEach(Theme.allCases) { theme in
+                        themeButton(for: theme)
+                    }
                 }
+                
+                Spacer()
             }
-
-            Spacer()
+            .padding()
+            .background(.regularMaterial)
+            .navigationTitle("Settings")
         }
-        .padding()
-        .background(.regularMaterial)
     }
 
     @ViewBuilder
