@@ -36,7 +36,7 @@ struct CurrentWeatherResponse: Decodable {
     func toDomain() -> Weather {
         Weather(
             date: Date(timeIntervalSince1970: date),
-            main: weather.first?.main.lowercased() ?? "clear",
+            main: weather.first?.main,
             currentTemperature: main.temp,
             minTemperature: main.min,
             maxTemperature: main.max
