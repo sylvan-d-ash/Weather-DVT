@@ -23,6 +23,12 @@ struct ContentView: View {
             )
         }
         .ignoresSafeArea(edges: .bottom)
+        .sheet(isPresented: $showLocations) {
+            LocationsView()
+        }
+        .sheet(isPresented: $showSettings) {
+            SettingsView()
+        }
     }
 }
 
