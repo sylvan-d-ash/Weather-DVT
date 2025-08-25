@@ -50,9 +50,9 @@ struct Weather: Identifiable {
     let id = UUID()
     let date: Date
     let main: String?
-    let currentTemperature: Double
-    let minTemperature: Double?
-    let maxTemperature: Double?
+    let currentTempInCelcius: Double
+    let minTempInCelcius: Double?
+    let maxTempInCelcius: Double?
 
     var condition: Condition {
         switch main?.lowercased() {
