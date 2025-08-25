@@ -17,43 +17,20 @@ struct WeatherView: View {
     }
 
     var body: some View {
-        VStack(spacing: -2) {
-            headerView
+        ScrollView {
+            VStack(spacing: -2) {
+                headerView
 
-            VStack(spacing: 24) {
-                currentWeather
-
-                if viewModel.isLoading {
-                    ProgressView()
-                        .tint(.white)
-                        .frame(maxWidth: .infinity)
-                } else if !viewModel.dailySummaries.isEmpty {
-                    Group {
-                        ForEach(viewModel.dailySummaries) { weather in
-                            DailyForecastRow(
-                                day: weather.date,
-                                icon: weather.condition.icon,
-                                temp: viewModel.formatTemperature(weather.currentTemperature)
-                            )
-                        }
-                    }
-                    .font(.title)
-                    .foregroundStyle(.white)
-                    .padding(.horizontal)
-                } else if let errorMessage = viewModel.errorMessage {
-                    Text(errorMessage)
-                        .font(.caption)
-                        .foregroundStyle(.red)
-                        .multilineTextAlignment(.center)
-                        .padding()
-                        .background(.white)
-                        .clipShape(.capsule)
+                VStack(spacing: 24) {
+                    currentWeather
+                    forecastContent
+                    Spacer()
                 }
-
-                Spacer()
             }
-            .background(viewModel.backgroundColor)
         }
+        .scrollBounceBehavior(.basedOnSize)
+        .background(viewModel.backgroundColor)
+        .ignoresSafeArea(edges: .top)
         .onAppear {
             viewModel.requestAuthorization()
         }
@@ -64,7 +41,6 @@ struct WeatherView: View {
             Image(viewModel.backgroundImage)
                 .resizable()
                 .frame(maxWidth: .infinity)
-                .ignoresSafeArea(edges: .top)
 
             VStack(spacing: 24) {
                 Spacer()
@@ -109,6 +85,37 @@ struct WeatherView: View {
                 .background(.white)
         }
         .padding(.top)
+    }
+
+    private var forecastContent: some View {
+        Group {
+            if viewModel.isLoading {
+                ProgressView()
+                    .tint(.white)
+                    .frame(maxWidth: .infinity)
+            } else if !viewModel.dailySummaries.isEmpty {
+                Group {
+                    ForEach(viewModel.dailySummaries) { weather in
+                        DailyForecastRow(
+                            day: weather.date,
+                            icon: weather.condition.icon,
+                            temp: viewModel.formatTemperature(weather.currentTemperature)
+                        )
+                    }
+                }
+                .font(.title)
+                .foregroundStyle(.white)
+                .padding(.horizontal)
+            } else if let errorMessage = viewModel.errorMessage {
+                Text(errorMessage)
+                    .font(.caption)
+                    .foregroundStyle(.red)
+                    .multilineTextAlignment(.center)
+                    .padding()
+                    .background(.white)
+                    .clipShape(.capsule)
+            }
+        }
     }
 }
 
