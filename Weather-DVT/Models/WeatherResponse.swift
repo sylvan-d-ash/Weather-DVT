@@ -24,7 +24,7 @@ private struct MainResponse: Decodable {
 }
 
 struct CurrentWeatherResponse: Decodable {
-    fileprivate let weather: WeatherResponse
+    fileprivate let weather: [WeatherResponse]
     fileprivate let main: MainResponse
     let date: TimeInterval
 
@@ -36,7 +36,7 @@ struct CurrentWeatherResponse: Decodable {
     func toDomain() -> Weather {
         Weather(
             date: Date(timeIntervalSince1970: date),
-            condition: weather.main,
+            main: weather.first?.main.lowercased() ?? "clear",
             currentTemperature: main.temp,
             minTemperature: main.min,
             maxTemperature: main.max

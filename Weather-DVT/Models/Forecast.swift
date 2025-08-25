@@ -7,7 +7,8 @@
 
 import Foundation
 
-struct Forecast {
+struct Forecast: Identifiable {
+    let id = UUID()
     let date: Date
     let city: String
     let list: [Weather]
