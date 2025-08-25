@@ -45,26 +45,11 @@ struct ForecastRow: View {
 }
 
 struct WeatherView: View {
+    @StateObject private var viewModel = ViewModel()
+
     var body: some View {
         VStack(spacing: -2) {
-            ZStack {
-                Image("forest_sunny")
-                    .resizable()
-                    .frame(maxWidth: .infinity)
-                    .ignoresSafeArea(edges: .top)
-
-                VStack(spacing: 24) {
-                    Spacer()
-
-                    Text("25°")
-
-                    Text("SUNNY")
-
-                    Spacer()
-                }
-                .font(.system(size: 44, weight: .bold, design: .default))
-                .foregroundStyle(.white)
-            }
+            headerView
 
             VStack(spacing: 24) {
                 VStack {
@@ -97,6 +82,30 @@ struct WeatherView: View {
                 Spacer()
             }
             .background(.sunny)
+        }
+        .task {
+            await viewModel.loadWeather() 
+        }
+    }
+
+    private var headerView: some View {
+        ZStack {
+            Image(viewModel.backgroundImage)
+                .resizable()
+                .frame(maxWidth: .infinity)
+                .ignoresSafeArea(edges: .top)
+
+            VStack(spacing: 24) {
+                Spacer()
+
+                Text(viewModel.formatTemperature(viewModel.weather?.currentTemperature))
+
+                Text(viewModel.weather?.condition ?? "--")
+
+                Spacer()
+            }
+            .font(.system(size: 44, weight: .bold, design: .default))
+            .foregroundStyle(.white)
         }
     }
 }
