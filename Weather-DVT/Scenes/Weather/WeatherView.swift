@@ -7,44 +7,6 @@
 
 import SwiftUI
 
-struct CurrentWeatherRow: View {
-    let temp: String
-    let text: String
-
-    var body: some View {
-        VStack {
-            Text(temp)
-                .fontWeight(.bold)
-                .font(.title2)
-
-            Text(text)
-                .font(.title3)
-        }
-        .foregroundStyle(.white)
-    }
-}
-
-struct ForecastRow: View {
-    let day: Date
-    let icon: String
-    let temp: String
-
-    var body: some View {
-        HStack {
-            Text(day.formatted(Date.FormatStyle().weekday(.wide)))
-                .frame(maxWidth: .infinity, alignment: .leading)
-
-            Image(icon)
-                .resizable()
-                .scaledToFit()
-                .frame(width: 25, height: 25, alignment: .center)
-
-            Text(temp)
-                .frame(maxWidth: .infinity, alignment: .trailing)
-        }
-    }
-}
-
 struct WeatherView: View {
     @StateObject private var viewModel = ViewModel()
 
@@ -62,7 +24,7 @@ struct WeatherView: View {
                 } else if !viewModel.dailySummaries.isEmpty {
                     Group {
                         ForEach(viewModel.dailySummaries) { weather in
-                            ForecastRow(
+                            DailyForecastRow(
                                 day: weather.date,
                                 icon: weather.condition.icon,
                                 temp: viewModel.formatTemperature(weather.currentTemperature)
@@ -109,21 +71,21 @@ struct WeatherView: View {
     private var currentWeather: some View {
         VStack {
             HStack {
-                CurrentWeatherRow(
+                CurrentWeatherColumn(
                     temp: viewModel.formatTemperature(viewModel.weather?.minTemperature),
                     text: "min"
                 )
 
                 Spacer()
 
-                CurrentWeatherRow(
+                CurrentWeatherColumn(
                     temp: viewModel.formatTemperature(viewModel.weather?.currentTemperature),
                     text: "Current"
                 )
 
                 Spacer()
 
-                CurrentWeatherRow(
+                CurrentWeatherColumn(
                     temp: viewModel.formatTemperature(viewModel.weather?.maxTemperature),
                     text: "max"
                 )
