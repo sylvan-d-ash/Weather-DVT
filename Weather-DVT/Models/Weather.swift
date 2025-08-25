@@ -30,11 +30,11 @@ struct Weather: Identifiable {
             }
         }
 
-        var backgroundColor: Color {
+        func backgroundColor(base: String = "forest_") -> Color {
             switch self {
-            case .sunny: return .sunny
             case .rainy: return .rainy
-            case .cloudy: return .cloudy
+            case .cloudy: return Color(base + "cloudy")
+            case .sunny: return Color(base + "sunny")
             }
         }
 
