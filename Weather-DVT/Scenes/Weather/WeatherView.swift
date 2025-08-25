@@ -52,39 +52,35 @@ struct WeatherView: View {
             headerView
 
             VStack(spacing: 24) {
-                VStack {
-                    HStack {
-                        CurrentWeatherRow(temp: "19°", text: "min")
-                        Spacer()
-                        CurrentWeatherRow(temp: "25°", text: "Current")
-                        Spacer()
-                        CurrentWeatherRow(temp: "26°", text: "max")
+                currentWeather
+
+                if viewModel.isLoading {
+                    ProgressView()
+                        .tint(.white)
+                        .frame(maxWidth: .infinity)
+                } else if let forecast = viewModel.forecast {
+                    Group {
+                        ForEach(forecast.list) { weather in
+                            ForecastRow(
+                                day: weather.date.formatted(Date.FormatStyle().weekday()),
+                                icon: weather.condition.icon,
+                                temp: viewModel.formatTemperature(weather.currentTemperature)
+                            )
+                        }
                     }
+                    .font(.title)
+                    .foregroundStyle(.white)
                     .padding(.horizontal)
-
-                    Divider()
-                        .frame(height: 2)
-                        .background(.white)
+                } else {
+                    EmptyView()
                 }
-                .padding(.top)
-
-                Group {
-                    ForecastRow(day: "Tuesday", icon: "clear", temp: "25°")
-                    ForecastRow(day: "Wednesday", icon: "clear", temp: "25°")
-                    ForecastRow(day: "Thursday", icon: "clear", temp: "25°")
-                    ForecastRow(day: "Friday", icon: "clear", temp: "25°")
-                    ForecastRow(day: "Saturday", icon: "clear", temp: "25°")
-                }
-                .font(.title)
-                .foregroundStyle(.white)
-                .padding(.horizontal)
 
                 Spacer()
             }
             .background(.sunny)
         }
         .task {
-            await viewModel.loadWeather() 
+//            await viewModel.loadWeather()
         }
     }
 
@@ -100,13 +96,44 @@ struct WeatherView: View {
 
                 Text(viewModel.formatTemperature(viewModel.weather?.currentTemperature))
 
-                Text(viewModel.weather?.condition ?? "--")
+                Text(viewModel.weather?.condition.text ?? "--")
 
                 Spacer()
             }
             .font(.system(size: 44, weight: .bold, design: .default))
             .foregroundStyle(.white)
         }
+    }
+
+    private var currentWeather: some View {
+        VStack {
+            HStack {
+                CurrentWeatherRow(
+                    temp: viewModel.formatTemperature(viewModel.weather?.minTemperature),
+                    text: "min"
+                )
+
+                Spacer()
+
+                CurrentWeatherRow(
+                    temp: viewModel.formatTemperature(viewModel.weather?.currentTemperature),
+                    text: "Current"
+                )
+
+                Spacer()
+
+                CurrentWeatherRow(
+                    temp: viewModel.formatTemperature(viewModel.weather?.maxTemperature),
+                    text: "max"
+                )
+            }
+            .padding(.horizontal)
+
+            Divider()
+                .frame(height: 2)
+                .background(.white)
+        }
+        .padding(.top)
     }
 }
 

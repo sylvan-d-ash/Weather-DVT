@@ -17,30 +17,11 @@ extension WeatherView {
         @Published private(set) var errorMessage: String?
 
         var backgroundColor: Color {
-            guard let condition = weather?.condition else {
-                return Color.sunny
-            }
-
-            switch condition {
-            case "sunny": return .sunny
-            case "rainy": return .rainy
-            case "cloudy": return .cloudy
-            default: return .sunny
-            }
+            weather?.condition.backgroundColor ?? .sunny
         }
 
         var backgroundImage: String {
-            let base = "forest_"
-            guard let condition = weather?.condition else {
-                return base + "sunny"
-            }
-
-            switch condition {
-            case "sunny": return base + "sunny"
-            case "rainy": return base + "rainy"
-            case "cloudy": return base + "cloudy"
-            default: return base + "sunny"
-            }
+            weather?.condition.backgroundImage() ?? "forest_sunny"
         }
 
         private let service: WeatherService
@@ -62,25 +43,21 @@ extension WeatherView {
             switch current {
             case .success(let weather):
                 self.weather = weather
-                print(weather)
             case .failure(let error):
-                print(error.localizedDescription)
                 self.errorMessage = error.localizedDescription
             }
 
             switch forecast {
             case .success(let forecast):
                 self.forecast = forecast
-                print(forecast)
             case .failure(let error):
-                print(error.localizedDescription)
                 self.errorMessage = error.localizedDescription
             }
         }
 
         func formatTemperature(_ temp: Double?) -> String {
             guard let temp = temp else { return "--" }
-            return "\(temp)°"
+            return String(format: "%.0f°", temp)
         }
     }
 }
