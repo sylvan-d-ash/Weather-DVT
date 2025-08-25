@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct SettingsView: View {
+    @Environment(\.dismiss) private var dismiss
+
     @AppStorage("theme")
     var selectedTheme: Theme = .forest
 
@@ -39,6 +41,13 @@ struct SettingsView: View {
             .scrollContentBackground(.hidden)
             .background(.regularMaterial)
             .navigationTitle("Settings")
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Done") {
+                        dismiss()
+                    }
+                }
+            }
         }
     }
 
