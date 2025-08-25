@@ -62,16 +62,25 @@ extension WeatherView {
             switch current {
             case .success(let weather):
                 self.weather = weather
+                print(weather)
             case .failure(let error):
+                print(error.localizedDescription)
                 self.errorMessage = error.localizedDescription
             }
 
             switch forecast {
             case .success(let forecast):
                 self.forecast = forecast
+                print(forecast)
             case .failure(let error):
+                print(error.localizedDescription)
                 self.errorMessage = error.localizedDescription
             }
+        }
+
+        func formatTemperature(_ temp: Double?) -> String {
+            guard let temp = temp else { return "--" }
+            return "\(temp)°"
         }
     }
 }
