@@ -13,7 +13,7 @@ enum TemperatureUnit: String, Identifiable, CaseIterable, Codable {
 
     var id: String { self.rawValue }
 
-    var unit: String {
+    var system: String {
         switch self {
         case .celcius: return "metric"
         case .fahrenheit: return "imperial"

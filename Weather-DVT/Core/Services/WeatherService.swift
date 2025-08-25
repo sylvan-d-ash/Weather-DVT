@@ -26,7 +26,7 @@ enum WeatherEndpoint: APIEndpoint {
             return [
                 "lat": lat,
                 "lon": lon,
-                "units": "metric", // TODO: make dynamic later
+                "units": "metric",
             ]
         }
     }

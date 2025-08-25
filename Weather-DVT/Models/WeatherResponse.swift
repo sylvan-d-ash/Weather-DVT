@@ -37,9 +37,9 @@ struct CurrentWeatherResponse: Decodable {
         Weather(
             date: Date(timeIntervalSince1970: date),
             main: weather.first?.main,
-            currentTemperature: main.temp,
-            minTemperature: main.min,
-            maxTemperature: main.max
+            currentTempInCelcius: main.temp,
+            minTempInCelcius: main.min,
+            maxTempInCelcius: main.max
         )
     }
 }

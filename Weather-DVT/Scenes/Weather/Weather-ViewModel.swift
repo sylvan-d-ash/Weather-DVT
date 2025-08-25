@@ -13,6 +13,7 @@ extension WeatherView {
     @MainActor
     final class ViewModel: ObservableObject {
         @AppStorage("theme") private var selectedTheme: Theme = .forest
+        @AppStorage("unit") private var selectedUnit: TemperatureUnit = .celcius
 
         @Published private(set) var weather: Weather?
         @Published private(set) var dailySummaries: [Weather] = []
@@ -42,9 +43,16 @@ extension WeatherView {
             locationManager.requestAuthorization()
         }
 
-        func formatTemperature(_ temp: Double?) -> String {
-            guard let temp = temp else { return "--" }
-            return String(format: "%.0f°", temp)
+        func formatTemperature(_ celcius: Double?) -> String {
+            guard let celcius = celcius else { return "--" }
+
+            let converted: Double
+            switch selectedUnit {
+            case .celcius: converted = celcius
+            case .fahrenheit: converted = (celcius * 9.0 / 5.0) + 32.0
+            }
+
+            return String(format: "%.0f°", converted)
         }
 
         private func bindLocation() {
@@ -113,8 +121,8 @@ extension WeatherView {
                 guard let first = weathers.first else { return nil }
 
                 // get average min/max temps
-                let minTemp = weathers.compactMap { $0.minTemperature ?? $0.currentTemperature }.min()
-                let maxTemp = weathers.compactMap { $0.maxTemperature ?? $0.currentTemperature }.max()
+                let minTemp = weathers.compactMap { $0.minTempInCelcius ?? $0.currentTempInCelcius }.min()
+                let maxTemp = weathers.compactMap { $0.maxTempInCelcius ?? $0.currentTempInCelcius }.max()
 
                 // get most frequent main
                 let mainCounts = Dictionary(grouping: weathers, by: { $0.main })
@@ -125,9 +133,9 @@ extension WeatherView {
                     date: day,
                     main: mostFrequentMain,
                     // average of min/max
-                    currentTemperature: ((minTemp ?? 0) + (maxTemp ?? 0)) / 2,
-                    minTemperature: minTemp,
-                    maxTemperature: maxTemp
+                    currentTempInCelcius: ((minTemp ?? 0) + (maxTemp ?? 0)) / 2,
+                    minTempInCelcius: minTemp,
+                    maxTempInCelcius: maxTemp
                 )
             }.sorted(by: { $0.date < $1.date })
         }

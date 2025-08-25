@@ -45,7 +45,7 @@ struct WeatherView: View {
             VStack(spacing: 24) {
                 Spacer()
 
-                Text(viewModel.formatTemperature(viewModel.weather?.currentTemperature))
+                Text(viewModel.formatTemperature(viewModel.weather?.currentTempInCelcius))
 
                 Text(viewModel.weather?.condition.text ?? "--")
 
@@ -60,21 +60,21 @@ struct WeatherView: View {
         VStack {
             HStack {
                 CurrentWeatherColumn(
-                    temp: viewModel.formatTemperature(viewModel.weather?.minTemperature),
+                    temp: viewModel.formatTemperature(viewModel.weather?.minTempInCelcius),
                     text: "min"
                 )
 
                 Spacer()
 
                 CurrentWeatherColumn(
-                    temp: viewModel.formatTemperature(viewModel.weather?.currentTemperature),
+                    temp: viewModel.formatTemperature(viewModel.weather?.currentTempInCelcius),
                     text: "Current"
                 )
 
                 Spacer()
 
                 CurrentWeatherColumn(
-                    temp: viewModel.formatTemperature(viewModel.weather?.maxTemperature),
+                    temp: viewModel.formatTemperature(viewModel.weather?.maxTempInCelcius),
                     text: "max"
                 )
             }
@@ -99,7 +99,7 @@ struct WeatherView: View {
                         DailyForecastRow(
                             day: weather.date,
                             icon: weather.condition.icon,
-                            temp: viewModel.formatTemperature(weather.currentTemperature)
+                            temp: viewModel.formatTemperature(weather.currentTempInCelcius)
                         )
                     }
                 }
