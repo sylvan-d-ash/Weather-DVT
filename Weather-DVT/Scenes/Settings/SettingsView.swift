@@ -7,29 +7,6 @@
 
 import SwiftUI
 
-enum Theme: String, Identifiable, CaseIterable, Codable {
-    case forest
-    case sea
-
-    var id: String { self.rawValue }
-
-    var displayName: String {
-        switch self {
-        case .forest: return "Forest"
-        case .sea: return "Sea"
-        }
-    }
-
-    var base: String {
-        switch self {
-        case .forest: return "forest_"
-        case .sea: return "sea_"
-        }
-    }
-
-    var image: String { base + "sunny" }
-}
-
 struct SettingsView: View {
     @AppStorage("theme")
     var selectedTheme: Theme = .forest
