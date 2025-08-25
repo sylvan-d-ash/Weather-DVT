@@ -12,6 +12,8 @@ import SwiftUI
 extension WeatherView {
     @MainActor
     final class ViewModel: ObservableObject {
+        @AppStorage("theme") private var selectedTheme: Theme = .forest
+
         @Published private(set) var weather: Weather?
         @Published private(set) var dailySummaries: [Weather] = []
         @Published private(set) var isLoading = false
@@ -22,7 +24,7 @@ extension WeatherView {
         }
 
         var backgroundImage: String {
-            weather?.condition.backgroundImage() ?? "forest_sunny"
+            weather?.condition.backgroundImage(base: selectedTheme.base) ?? "forest_sunny"
         }
 
         private let service: WeatherService
