@@ -34,8 +34,9 @@ struct WeatherView: View {
                     .font(.title)
                     .foregroundStyle(.white)
                     .padding(.horizontal)
-                } else {
-                    EmptyView()
+                } else if let errorMessage = viewModel.errorMessage {
+                    Text(errorMessage)
+                        .font(.caption)
                 }
 
                 Spacer()
