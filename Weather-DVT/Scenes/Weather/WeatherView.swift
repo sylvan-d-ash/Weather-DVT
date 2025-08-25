@@ -5,10 +5,16 @@
 //  Created by Sylvan  on 24/08/2025.
 //
 
+import Combine
+import CoreLocation
 import SwiftUI
 
 struct WeatherView: View {
-    @StateObject private var viewModel = ViewModel()
+    @StateObject private var viewModel: ViewModel
+
+    init(_ viewModel: ViewModel) {
+        _viewModel = .init(wrappedValue: viewModel)
+    }
 
     var body: some View {
         VStack(spacing: -2) {
@@ -37,14 +43,19 @@ struct WeatherView: View {
                 } else if let errorMessage = viewModel.errorMessage {
                     Text(errorMessage)
                         .font(.caption)
+                        .foregroundStyle(.red)
+                        .multilineTextAlignment(.center)
+                        .padding()
+                        .background(.white)
+                        .clipShape(.capsule)
                 }
 
                 Spacer()
             }
-            .background(.sunny)
+            .background(viewModel.backgroundColor)
         }
-        .task {
-            await viewModel.loadWeather()
+        .onAppear {
+            viewModel.requestAuthorization()
         }
     }
 
@@ -101,6 +112,36 @@ struct WeatherView: View {
     }
 }
 
+private final class MockLocationManager: LocationManager {
+    private let locationSubject = PassthroughSubject<CLLocationCoordinate2D?, Never>()
+    private let authSubject = PassthroughSubject<CLAuthorizationStatus, Never>()
+    private let errorSubject = PassthroughSubject<String?, Never>()
+
+    var locationPublisher: AnyPublisher<CLLocationCoordinate2D?, Never> {
+        locationSubject.eraseToAnyPublisher()
+    }
+
+    var authorizationStatusPublisher: AnyPublisher<CLAuthorizationStatus, Never> {
+        authSubject.eraseToAnyPublisher()
+    }
+
+    var errorMessagePublisher: AnyPublisher<String?, Never> {
+        errorSubject.eraseToAnyPublisher()
+    }
+
+    func requestAuthorization() {
+        // Simulate granted auth
+        authSubject.send(.denied)
+    }
+
+    func requestLocation() {
+        // Simulate fake location
+        locationSubject.send(CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194))
+    }
+}
+
 #Preview {
-    WeatherView()
+    WeatherView(
+        .init(locationManager: MockLocationManager())
+    )
 }
