@@ -49,13 +49,13 @@ struct Weather: Identifiable {
 
     let id = UUID()
     let date: Date
-    let main: String
+    let main: String?
     let currentTemperature: Double
     let minTemperature: Double?
     let maxTemperature: Double?
 
     var condition: Condition {
-        switch main {
+        switch main?.lowercased() {
         case "thunderstorm", "drizzle", "rain": return .rainy
         case "snow", "atmosphere", "clouds": return .cloudy
         case "clear": return .sunny
