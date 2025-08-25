@@ -14,6 +14,7 @@ protocol LocationManager: AnyObject {
     var authorizationStatusPublisher: AnyPublisher<CLAuthorizationStatus, Never> { get }
     var errorMessagePublisher: AnyPublisher<String?, Never> { get }
 
+    func requestAuthorization()
     func requestLocation()
 }
 
@@ -43,8 +44,11 @@ final class DefaultLocationManager: NSObject, ObservableObject, LocationManager 
         self.manager.desiredAccuracy = kCLLocationAccuracyKilometer
     }
 
-    func requestLocation() {
+    func requestAuthorization() {
         manager.requestWhenInUseAuthorization()
+    }
+
+    func requestLocation() {
         manager.requestLocation()
     }
 }
