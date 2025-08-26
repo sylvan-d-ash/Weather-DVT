@@ -7,6 +7,7 @@
 
 import Combine
 import Foundation
+import SwiftUI
 
 extension LocationsView {
     @MainActor
@@ -15,6 +16,7 @@ extension LocationsView {
         @Published private(set) var savedLocations = ["Nairobi", "Cape Town", "New York"]
         @Published private(set) var searchResults: [LocationSearchResult] = []
         @Published private(set) var errorMessage: String?
+        @Published var path = NavigationPath()
 
         private let mapService: MapSearchService
         private var cancellables = Set<AnyCancellable>()
@@ -22,6 +24,15 @@ extension LocationsView {
         init(mapService: MapSearchService = DefaultMapSearchService()) {
             self.mapService = mapService
             bindSearchText()
+        }
+
+        func navigateToSearchResults(for result: LocationSearchResult) {
+            path.append(result)
+        }
+
+        func addLocation(_ result: LocationSearchResult) {
+            print(result)
+            popToRoot()
         }
 
         private func bindSearchText() {
@@ -49,6 +60,10 @@ extension LocationsView {
             case .failure(let error):
                 errorMessage = error.localizedDescription
             }
+        }
+
+        private func popToRoot() {
+            path.removeLast()
         }
     }
 }
