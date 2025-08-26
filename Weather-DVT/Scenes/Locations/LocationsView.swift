@@ -32,7 +32,7 @@ struct LocationsView: View {
             .searchable(
                 text: $viewModel.searchText,
                 placement: .navigationBarDrawer(displayMode: .always),
-                prompt: "Search for a city or town"
+                prompt: "Search for an airport or area"
             )
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {

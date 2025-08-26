@@ -16,7 +16,7 @@ final class DefaultMapSearchService: MapSearchService {
     func search(for query: String) async -> Result<[LocationSearchResult], any Error> {
         let request = MKLocalSearch.Request()
         request.naturalLanguageQuery = query
-        request.resultTypes = .address
+        request.resultTypes = .pointOfInterest
 
         do {
             let response = try await MKLocalSearch(request: request).start()
@@ -24,8 +24,10 @@ final class DefaultMapSearchService: MapSearchService {
                 guard let name = item.name, let location = item.placemark.location else {
                     return nil
                 }
-                // restrict to only cities or towns
-                guard item.placemark.locality != nil, item.placemark.subLocality == nil, item.placemark.thoroughfare == nil else {
+
+                // restrict to only airports or towns
+                guard (item.placemark.locality != nil && item.placemark.thoroughfare == nil) ||
+                        (item.pointOfInterestCategory == .airport) else {
                     return nil
                 }
 
