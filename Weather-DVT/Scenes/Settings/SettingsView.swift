@@ -24,7 +24,6 @@ struct SettingsView: View {
                         unitButton(for: unit)
                     }
                 }
-//                .listRowBackground(Color.clear)
                 .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
 
                 Section("Theme") {
