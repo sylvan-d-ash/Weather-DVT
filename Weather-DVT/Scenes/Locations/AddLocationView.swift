@@ -13,7 +13,10 @@ struct AddLocationView: View {
 
     var body: some View {
         WeatherView(
-            .init(locationManager: DefaultLocationManager())
+            .init(
+                locationManager: DefaultLocationManager(),
+                result: result
+            )
         )
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {

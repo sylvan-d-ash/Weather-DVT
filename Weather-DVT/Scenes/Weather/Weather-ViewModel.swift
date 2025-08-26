@@ -39,6 +39,20 @@ extension WeatherView {
             bindLocation()
         }
 
+        init(
+            service: WeatherService = DefaultWeatherService(),
+            locationManager: LocationManager,
+            result: LocationSearchResult
+        ) {
+            self.service = service
+            self.locationManager = locationManager
+
+            Task {
+                let coordinate = result.coordinate
+                await loadWeather(lat: coordinate.latitude, lon: coordinate.longitude)
+            }
+        }
+
         func requestAuthorization() {
             locationManager.requestAuthorization()
         }
