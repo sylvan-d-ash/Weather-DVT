@@ -12,7 +12,7 @@ struct LocationsView: View {
     @StateObject private var viewModel = ViewModel()
 
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $viewModel.path) {
             List {
                 ForEach(viewModel.savedLocations, id: \.self) { location in
                     Button {
@@ -45,7 +45,7 @@ struct LocationsView: View {
                 if !viewModel.searchResults.isEmpty {
                     List(viewModel.searchResults) { result in
                         Button {
-                            print(result.name)
+                            viewModel.navigateToSearchResults(for: result)
                         } label: {
                             VStack(alignment: .leading) {
                                 Text(result.name)
@@ -59,6 +59,11 @@ struct LocationsView: View {
                         .buttonStyle(.plain)
                     }
                     .background(.thinMaterial)
+                }
+            }
+            .navigationDestination(for: LocationSearchResult.self) { searchResult in
+                AddLocationView(result: searchResult) { result in
+                    viewModel.addLocation(result)
                 }
             }
         }
