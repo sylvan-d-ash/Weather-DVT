@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct LocationsView: View {
+    @Environment(\.dismiss) private var dismiss
+
     @State private var searchText = ""
     private let locations = ["Nairobi", "Cape Town", "New York"]
 
@@ -27,11 +29,20 @@ struct LocationsView: View {
                 }
             }
             .navigationTitle("Locations")
+            .scrollContentBackground(.hidden)
+            .background(.regularMaterial)
             .searchable(
                 text: $searchText,
                 placement: .navigationBarDrawer(displayMode: .always),
                 prompt: "Search for a city or airport"
             )
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Done") {
+                        dismiss()
+                    }
+                }
+            }
         }
     }
 }
