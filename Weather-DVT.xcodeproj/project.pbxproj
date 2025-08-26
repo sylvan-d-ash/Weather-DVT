@@ -202,7 +202,7 @@
 			mainGroup = 04DCD28E2E59EA7500216A0D;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				04DCD2F12E5B571F00216A0D /* XCRemoteSwiftPackageReference "SwiftLint" */,
+				04F232522E5E11EE00BDC8EF /* XCRemoteSwiftPackageReference "SwiftLint" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 04DCD2982E59EA7500216A0D /* Products */;
@@ -599,7 +599,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		04DCD2F12E5B571F00216A0D /* XCRemoteSwiftPackageReference "SwiftLint" */ = {
+		04F232522E5E11EE00BDC8EF /* XCRemoteSwiftPackageReference "SwiftLint" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/realm/SwiftLint";
 			requirement = {
