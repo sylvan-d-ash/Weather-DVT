@@ -16,12 +16,16 @@ final class DefaultMapSearchService: MapSearchService {
     func search(for query: String) async -> Result<[LocationSearchResult], any Error> {
         let request = MKLocalSearch.Request()
         request.naturalLanguageQuery = query
-        request.resultTypes = .pointOfInterest
+        request.resultTypes = .address
 
         do {
             let response = try await MKLocalSearch(request: request).start()
             let results = response.mapItems.compactMap { item -> LocationSearchResult? in
                 guard let name = item.name, let location = item.placemark.location else {
+                    return nil
+                }
+                // restrict to only cities or towns
+                guard item.placemark.locality != nil, item.placemark.subLocality == nil, item.placemark.thoroughfare == nil else {
                     return nil
                 }
 
@@ -30,7 +34,7 @@ final class DefaultMapSearchService: MapSearchService {
                     region = administrativeArea
                 }
                 if let country = item.placemark.country {
-                    region = region.isEmpty ? country : ", \(country)"
+                    region = region.isEmpty ? country : "\(region), \(country)"
                 }
 
                 return .init(
