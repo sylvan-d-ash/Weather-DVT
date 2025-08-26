@@ -9,14 +9,12 @@ import SwiftUI
 
 struct LocationsView: View {
     @Environment(\.dismiss) private var dismiss
-
-    @State private var searchText = ""
-    private let locations = ["Nairobi", "Cape Town", "New York"]
+    @StateObject private var viewModel = ViewModel()
 
     var body: some View {
         NavigationStack {
             List {
-                ForEach(locations, id: \.self) { location in
+                ForEach(viewModel.savedLocations, id: \.self) { location in
                     Button {
                         print("Location: \(location)")
                     } label: {
@@ -32,15 +30,35 @@ struct LocationsView: View {
             .scrollContentBackground(.hidden)
             .background(.regularMaterial)
             .searchable(
-                text: $searchText,
+                text: $viewModel.searchText,
                 placement: .navigationBarDrawer(displayMode: .always),
-                prompt: "Search for a city or airport"
+                prompt: "Search for a city or town"
             )
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Done") {
                         dismiss()
                     }
+                }
+            }
+            .overlay {
+                if !viewModel.searchResults.isEmpty {
+                    List(viewModel.searchResults) { result in
+                        Button {
+                            print(result.name)
+                        } label: {
+                            VStack(alignment: .leading) {
+                                Text(result.name)
+                                Text(result.region)
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                            // Make the entire row tappable
+                            .contentShape(.rect)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                    .background(.thinMaterial)
                 }
             }
         }
