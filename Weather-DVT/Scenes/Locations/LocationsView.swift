@@ -8,7 +8,34 @@
 import SwiftUI
 
 struct LocationsView: View {
+    @State private var searchText = ""
+    private let locations = ["Nairobi", "Cape Town", "New York"]
+
     var body: some View {
-        Text("hello world")
+        NavigationStack {
+            List {
+                ForEach(locations, id: \.self) { location in
+                    Button {
+                        print("Location: \(location)")
+                    } label: {
+                        Text(location)
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .foregroundStyle(.secondary)
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+            .navigationTitle("Locations")
+            .searchable(
+                text: $searchText,
+                placement: .navigationBarDrawer(displayMode: .always),
+                prompt: "Search for a city or airport"
+            )
+        }
     }
+}
+
+#Preview {
+    LocationsView()
 }
