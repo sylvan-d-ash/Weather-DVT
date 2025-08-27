@@ -34,8 +34,28 @@ extension LocationsView {
         }
 
         func addLocation(_ result: SearchLocation) {
-            print(result)
+            // check for duplicates
+            let name = result.name
+            let descriptor = FetchDescriptor<CachedLocation>(predicate: #Predicate { $0.name == name })
+
+            if let items = try? modelContext.fetch(descriptor), items.isEmpty {
+                let location = CachedLocation(
+                    name: result.name,
+                    region: result.region,
+                    latitude: result.coordinate.latitude,
+                    longitude: result.coordinate.longitude
+                )
+                modelContext.insert(location)
+            }
+
             popToRoot()
+        }
+
+        func deleteLocations(at offsets: IndexSet, from savedLocations: [CachedLocation]) {
+            for index in offsets {
+                let location = savedLocations[index]
+                modelContext.delete(location)
+            }
         }
 
         private func bindSearchText() {
@@ -66,6 +86,7 @@ extension LocationsView {
         }
 
         private func popToRoot() {
+            guard !path.isEmpty else { return }
             path.removeLast()
         }
     }
