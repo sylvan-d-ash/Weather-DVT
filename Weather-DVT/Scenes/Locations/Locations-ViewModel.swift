@@ -48,6 +48,7 @@ extension LocationsView {
                 modelContext.insert(location)
             }
 
+            searchText = ""
             popToRoot()
         }
 

@@ -39,7 +39,8 @@ struct ContentView: View {
         .ignoresSafeArea(edges: .bottom)
         .sheet(isPresented: $showLocations) {
             LocationsView(.init(modelContext: modelContext)) { selectedLocation in
-                print(selectedLocation.name)
+                weatherViewModel.updateLocation(to: selectedLocation)
+                showLocations = false
             }
         }
         .sheet(isPresented: $showSettings) {
