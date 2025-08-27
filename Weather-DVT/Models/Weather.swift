@@ -63,3 +63,13 @@ struct Weather: Identifiable {
         }
     }
 }
+
+extension Weather {
+    init(from cache: CachedWeather) {
+        date = cache.lastUpdated
+        main = cache.main
+        currentTempInCelcius = cache.currentTempCelcius
+        minTempInCelcius = cache.minTempCelcius
+        maxTempInCelcius = cache.maxTempCelcius
+    }
+}
