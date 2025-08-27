@@ -71,6 +71,12 @@ extension WeatherView {
             return String(format: "%.0f°", converted)
         }
 
+        func updateLocation(to location: CachedLocation) {
+            self.location = WeatherLocation(from: location)
+
+            Task { await loadWeather() }
+        }
+
         private func bindLocation() {
             guard let locationManager else { return }
             locationManager.locationPublisher
