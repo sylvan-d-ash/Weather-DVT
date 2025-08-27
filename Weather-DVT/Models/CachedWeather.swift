@@ -13,16 +13,16 @@ final class CachedWeather {
     var currentTempCelcius: Double
     var minTempCelcius: Double?
     var maxTempCelcius: Double?
-    var main: String
+    var main: String?
     var lastUpdated: Date
 
     var location: CachedLocation?
 
-    init(currentTempCelcius: Double, minTempCelcius: Double? = nil, maxTempCelcius: Double? = nil, main: String, lastUpdated: Date) {
+    init(currentTempCelcius: Double, minTempCelcius: Double?, maxTempCelcius: Double?, main: String?) {
         self.currentTempCelcius = currentTempCelcius
         self.minTempCelcius = minTempCelcius
         self.maxTempCelcius = maxTempCelcius
         self.main = main
-        self.lastUpdated = lastUpdated
+        self.lastUpdated = .now
     }
 }

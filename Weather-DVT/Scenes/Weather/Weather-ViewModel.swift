@@ -111,6 +111,7 @@ extension WeatherView {
                 self.isLoading = false
             }
 
+            // TODO: show updating cached progress view
             // fetch fresh data from API
             async let currentWeatherResult = service.fetchCurrentWeather(
                 lat: location.latitude,
@@ -127,15 +128,16 @@ extension WeatherView {
             switch current {
             case .success(let weather):
                 self.weather = weather
+                updateCache(for: location, with: weather)
             case .failure(let error):
-                self.errorMessage = error.localizedDescription
+                errorMessage = error.localizedDescription
             }
 
             switch forecast {
             case .success(let forecast):
                 getDailySummaries(from: forecast)
             case .failure(let error):
-                self.errorMessage = error.localizedDescription
+                errorMessage = error.localizedDescription
             }
         }
 
@@ -181,6 +183,58 @@ extension WeatherView {
                     maxTempInCelcius: maxTemp
                 )
             }.sorted(by: { $0.date < $1.date })
+        }
+
+        private func updateCache(for location: WeatherLocation, with freshWeather: Weather) {
+            var locationToUpdate: CachedLocation?
+
+            switch location.kind {
+            case .temporary:
+                // never save weather for search results
+                return
+            case .saved(let id):
+                // use ID
+                let descriptor = FetchDescriptor<CachedLocation>(predicate: #Predicate { $0.id == id })
+                locationToUpdate = try? modelContext?.fetch(descriptor).first
+            case .current:
+                // use unique flag
+                let descriptor = FetchDescriptor<CachedLocation>(predicate: #Predicate { $0.isCurrentUserLocation })
+                if let currentLocation = try? modelContext?.fetch(descriptor).first {
+                    locationToUpdate = currentLocation
+                } else {
+                    // create a new location
+                    let newLocation = CachedLocation(
+                        name: "My Location", // TODO: reverse geocode
+                        region: "",
+                        latitude: location.latitude,
+                        longitude: location.longitude,
+                        isCurrentUserLocation: true
+                    )
+                    modelContext?.insert(newLocation)
+                    locationToUpdate = newLocation
+                }
+            }
+
+            guard let locationToUpdate else { return }
+
+            // update or create a new CachedWeather
+            if let cache = locationToUpdate.weather {
+                cache.currentTempCelcius = freshWeather.currentTempInCelcius
+                cache.minTempCelcius = freshWeather.minTempInCelcius
+                cache.maxTempCelcius = freshWeather.maxTempInCelcius
+                cache.main = freshWeather.main
+                cache.lastUpdated = .now
+            } else {
+                let newCache = CachedWeather(
+                    currentTempCelcius: freshWeather.currentTempInCelcius,
+                    minTempCelcius: freshWeather.minTempInCelcius,
+                    maxTempCelcius: freshWeather.maxTempInCelcius,
+                    main: freshWeather.main
+                )
+                locationToUpdate.weather = newCache
+            }
+
+            try? modelContext?.save()
         }
     }
 }
