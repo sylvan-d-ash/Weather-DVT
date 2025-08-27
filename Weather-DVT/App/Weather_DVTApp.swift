@@ -9,9 +9,12 @@ import SwiftUI
 
 @main
 struct WeatherDVTApp: App {
+    private let container = SwiftDataManager.sharedContainer
+
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(modelContext: container.mainContext)
+                .modelContainer(container)
         }
     }
 }

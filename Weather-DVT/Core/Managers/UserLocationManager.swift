@@ -1,5 +1,5 @@
 //
-//  LocationManager.swift
+//  UserLocationManager.swift
 //  Weather-DVT
 //
 //  Created by Sylvan  on 25/08/2025.
@@ -9,7 +9,7 @@ import Combine
 import CoreLocation
 import Foundation
 
-protocol LocationManager: AnyObject {
+protocol UserLocationManager: AnyObject {
     var locationPublisher: AnyPublisher<CLLocationCoordinate2D?, Never> { get }
     var authorizationStatusPublisher: AnyPublisher<CLAuthorizationStatus, Never> { get }
     var errorMessagePublisher: AnyPublisher<String?, Never> { get }
@@ -18,7 +18,7 @@ protocol LocationManager: AnyObject {
     func requestLocation()
 }
 
-final class DefaultLocationManager: NSObject, ObservableObject, LocationManager {
+final class DefaultUserLocationManager: NSObject, ObservableObject, UserLocationManager {
     @Published private var location: CLLocationCoordinate2D?
     @Published private var authorizationStatus: CLAuthorizationStatus = .notDetermined
     @Published private var errorMessage: String?
@@ -53,7 +53,7 @@ final class DefaultLocationManager: NSObject, ObservableObject, LocationManager 
     }
 }
 
-extension DefaultLocationManager: CLLocationManagerDelegate {
+extension DefaultUserLocationManager: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         location = locations.first?.coordinate
     }
