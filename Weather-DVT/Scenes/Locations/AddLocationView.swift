@@ -14,7 +14,7 @@ struct AddLocationView: View {
     var body: some View {
         WeatherView(
             .init(
-                locationManager: DefaultLocationManager(),
+                service: DefaultWeatherService(),
                 result: result
             )
         )

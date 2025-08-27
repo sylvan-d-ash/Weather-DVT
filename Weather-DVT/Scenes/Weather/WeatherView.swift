@@ -119,7 +119,7 @@ struct WeatherView: View {
     }
 }
 
-private final class MockLocationManager: LocationManager {
+private final class MockLocationManager: UserLocationManager {
     private let locationSubject = PassthroughSubject<CLLocationCoordinate2D?, Never>()
     private let authSubject = PassthroughSubject<CLAuthorizationStatus, Never>()
     private let errorSubject = PassthroughSubject<String?, Never>()
@@ -138,7 +138,7 @@ private final class MockLocationManager: LocationManager {
 
     func requestAuthorization() {
         // Simulate granted auth
-        authSubject.send(.denied)
+        authSubject.send(.authorizedWhenInUse)
     }
 
     func requestLocation() {
@@ -149,6 +149,11 @@ private final class MockLocationManager: LocationManager {
 
 #Preview {
     WeatherView(
-        .init(locationManager: MockLocationManager())
+        .init(
+            locationManager: MockLocationManager(),
+            persistenceService: DefaultPersistenceService(
+                modelContext: SwiftDataManager.previewContainer().mainContext
+            )
+        )
     )
 }

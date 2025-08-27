@@ -7,6 +7,7 @@
 
 import Combine
 import Foundation
+import SwiftData
 import SwiftUI
 
 extension LocationsView {
@@ -19,10 +20,12 @@ extension LocationsView {
         @Published var path = NavigationPath()
 
         private let mapService: MapSearchService
+        private let modelContext: ModelContext
         private var cancellables = Set<AnyCancellable>()
 
-        init(mapService: MapSearchService = DefaultMapSearchService()) {
+        init(mapService: MapSearchService = DefaultMapSearchService(), modelContext: ModelContext) {
             self.mapService = mapService
+            self.modelContext = modelContext
             bindSearchText()
         }
 
