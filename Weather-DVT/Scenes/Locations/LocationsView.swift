@@ -37,6 +37,9 @@ struct LocationsView: View {
                     }
                     .buttonStyle(.plain)
                 }
+                .onDelete { offsets in
+                    viewModel.deleteLocations(at: offsets, from: savedLocations)
+                }
             }
             .navigationTitle("Locations")
             .scrollContentBackground(.hidden)
@@ -47,6 +50,10 @@ struct LocationsView: View {
                 prompt: "Search for an airport or area"
             )
             .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    EditButton()
+                }
+
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Done") {
                         dismiss()
