@@ -14,7 +14,7 @@ extension LocationsView {
     final class ViewModel: ObservableObject {
         @Published var searchText = ""
         @Published private(set) var savedLocations = ["Nairobi", "Cape Town", "New York"]
-        @Published private(set) var searchResults: [LocationSearchResult] = []
+        @Published private(set) var searchResults: [SearchLocation] = []
         @Published private(set) var errorMessage: String?
         @Published var path = NavigationPath()
 
@@ -26,11 +26,11 @@ extension LocationsView {
             bindSearchText()
         }
 
-        func navigateToSearchResults(for result: LocationSearchResult) {
+        func navigateToSearchResults(for result: SearchLocation) {
             path.append(result)
         }
 
-        func addLocation(_ result: LocationSearchResult) {
+        func addLocation(_ result: SearchLocation) {
             print(result)
             popToRoot()
         }
