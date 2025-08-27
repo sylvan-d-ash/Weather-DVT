@@ -9,18 +9,18 @@ import Foundation
 import MapKit
 
 protocol MapSearchService: AnyObject {
-    func search(for query: String) async -> Result<[LocationSearchResult], Error>
+    func search(for query: String) async -> Result<[SearchLocation], Error>
 }
 
 final class DefaultMapSearchService: MapSearchService {
-    func search(for query: String) async -> Result<[LocationSearchResult], any Error> {
+    func search(for query: String) async -> Result<[SearchLocation], any Error> {
         let request = MKLocalSearch.Request()
         request.naturalLanguageQuery = query
         request.resultTypes = .pointOfInterest
 
         do {
             let response = try await MKLocalSearch(request: request).start()
-            let results = response.mapItems.compactMap { item -> LocationSearchResult? in
+            let results = response.mapItems.compactMap { item -> SearchLocation? in
                 guard let name = item.name, let location = item.placemark.location else {
                     return nil
                 }

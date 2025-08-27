@@ -42,7 +42,7 @@ extension WeatherView {
         init(
             service: WeatherService = DefaultWeatherService(),
             locationManager: LocationManager,
-            result: LocationSearchResult
+            result: SearchLocation
         ) {
             self.service = service
             self.locationManager = locationManager
