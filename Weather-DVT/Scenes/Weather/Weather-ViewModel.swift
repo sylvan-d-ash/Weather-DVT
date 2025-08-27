@@ -19,7 +19,9 @@ extension WeatherView {
         @Published private(set) var weather: Weather?
         @Published private(set) var dailySummaries: [Weather] = []
         @Published private(set) var isLoading = false
+        @Published private(set) var isUpdatingCache = false
         @Published private(set) var errorMessage: String?
+        @Published private(set) var lastUpdated: String?
 
         @Published private(set) var location: WeatherLocation?
 
@@ -29,6 +31,10 @@ extension WeatherView {
 
         var backgroundImage: String {
             weather?.condition.backgroundImage(base: selectedTheme.base) ?? "forest_rainy"
+        }
+
+        var locationName: String {
+            location?.name ?? "--"
         }
 
         private var locationManager: UserLocationManager?
@@ -114,18 +120,15 @@ extension WeatherView {
 
             isLoading = true
             errorMessage = nil
+            isUpdatingCache = location.kind != .temporary
 
             // check cache based on location kind
             if let cachedLocation = persistenceService?.fetchCachedWeather(for: location),
                let cachedWeather = cachedLocation.weather {
-                self.weather = Weather(from: cachedWeather)
-                self.dailySummaries = cachedLocation.forecast
-                    .map { Weather(from: $0) }
-                    .sorted { $0.date < $1.date }
-                self.isLoading = false
+                loadCachedWeather(from: cachedLocation, with: cachedWeather)
+                isLoading = false
             }
 
-            // TODO: show updating cached progress view
             // fetch fresh data from API
             async let currentWeatherResult = service.fetchCurrentWeather(
                 lat: location.latitude,
@@ -138,11 +141,13 @@ extension WeatherView {
 
             let (current, forecast) = await (currentWeatherResult, forecastResult)
             isLoading = false
+            isUpdatingCache = false
 
             switch current {
             case .success(let weather):
                 self.weather = weather
                 persistenceService?.updateCache(for: location, with: weather)
+                lastUpdated = "Last Update: Now"
             case .failure(let error):
                 errorMessage = error.localizedDescription
             }
@@ -153,6 +158,18 @@ extension WeatherView {
                 persistenceService?.updateCache(for: location, with: dailySummaries)
             case .failure(let error):
                 errorMessage = error.localizedDescription
+            }
+        }
+
+        private func loadCachedWeather(from cache: CachedLocation, with cachedWeather: CachedCurrentWeather) {
+            weather = Weather(from: cachedWeather)
+            dailySummaries = cache.forecast
+                .map { Weather(from: $0) }
+                .sorted { $0.date < $1.date }
+
+            if location?.kind != .temporary {
+                let date = cache.date.formatted(date: .abbreviated, time: .shortened)
+                lastUpdated = "Last Update: \(date)"
             }
         }
 
