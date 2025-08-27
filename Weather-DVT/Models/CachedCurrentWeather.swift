@@ -1,5 +1,5 @@
 //
-//  CachedWeather.swift
+//  CachedCurrentWeather.swift
 //  Weather-DVT
 //
 //  Created by Sylvan  on 27/08/2025.
@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-final class CachedWeather {
+final class CachedCurrentWeather {
     var currentTempCelcius: Double
     var minTempCelcius: Double?
     var maxTempCelcius: Double?

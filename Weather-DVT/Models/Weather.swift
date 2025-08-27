@@ -65,8 +65,16 @@ struct Weather: Identifiable {
 }
 
 extension Weather {
-    init(from cache: CachedWeather) {
+    init(from cache: CachedCurrentWeather) {
         date = cache.lastUpdated
+        main = cache.main
+        currentTempInCelcius = cache.currentTempCelcius
+        minTempInCelcius = cache.minTempCelcius
+        maxTempInCelcius = cache.maxTempCelcius
+    }
+
+    init(from cache: CachedForecastWeather) {
+        date = cache.date
         main = cache.main
         currentTempInCelcius = cache.currentTempCelcius
         minTempInCelcius = cache.minTempCelcius
