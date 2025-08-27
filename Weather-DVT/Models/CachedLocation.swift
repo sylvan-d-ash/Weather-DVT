@@ -23,12 +23,11 @@ final class CachedLocation {
     var weather: CachedWeather?
 
     init(
-        id: UUID,
+        id: UUID = UUID(),
         name: String,
         region: String,
         latitude: Double,
         longitude: Double,
-        date: Date,
         isCurrentUserLocation: Bool = false
     ) {
         self.id = id
@@ -36,7 +35,7 @@ final class CachedLocation {
         self.region = region
         self.latitude = latitude
         self.longitude = longitude
-        self.date = date
+        self.date = .now
         self.isCurrentUserLocation = isCurrentUserLocation
     }
 }
