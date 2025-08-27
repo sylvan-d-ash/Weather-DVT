@@ -5,17 +5,31 @@
 //  Created by Sylvan  on 23/08/2025.
 //
 
+import SwiftData
 import SwiftUI
 
 struct ContentView: View {
+    @Environment(\.modelContext) var modelContext: ModelContext
+
+    @StateObject private var weatherViewModel: WeatherView.ViewModel
+
     @State private var showLocations = false
     @State private var showSettings = false
 
+    init(modelContext: ModelContext) {
+        _weatherViewModel = .init(
+            wrappedValue: .init(
+                locationManager: DefaultUserLocationManager(),
+                persistenceService: DefaultPersistenceService(
+                    modelContext: modelContext
+                )
+            )
+        )
+    }
+
     var body: some View {
         ZStack(alignment: .bottom) {
-            WeatherView(
-                .init(locationManager: DefaultLocationManager())
-            )
+            WeatherView(weatherViewModel)
 
             BottomBarView(
                 showLocations: $showLocations,
@@ -24,7 +38,9 @@ struct ContentView: View {
         }
         .ignoresSafeArea(edges: .bottom)
         .sheet(isPresented: $showLocations) {
-            LocationsView()
+            LocationsView(.init(modelContext: modelContext)) { selectedLocation in
+                print(selectedLocation.name)
+            }
         }
         .sheet(isPresented: $showSettings) {
             SettingsView()
@@ -33,5 +49,7 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
+    let container = SwiftDataManager.previewContainer()
+    ContentView(modelContext: container.mainContext)
+        .modelContainer(container)
 }

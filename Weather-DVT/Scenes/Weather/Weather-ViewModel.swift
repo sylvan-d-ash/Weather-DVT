@@ -31,13 +31,13 @@ extension WeatherView {
             weather?.condition.backgroundImage(base: selectedTheme.base) ?? "forest_rainy"
         }
 
-        private var locationManager: LocationManager?
+        private var locationManager: UserLocationManager?
         private var persistenceService: PersistenceService?
         private let service: WeatherService
         private var cancellables = Set<AnyCancellable>()
 
         init(
-            locationManager: LocationManager,
+            locationManager: UserLocationManager,
             persistenceService: PersistenceService,
             service: WeatherService = DefaultWeatherService()
         ) {

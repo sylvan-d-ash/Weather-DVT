@@ -5,20 +5,32 @@
 //  Created by Sylvan  on 25/08/2025.
 //
 
+import SwiftData
 import SwiftUI
 
 struct LocationsView: View {
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var viewModel = ViewModel()
+
+    @StateObject private var viewModel: ViewModel
+
+    @Query(sort: \CachedLocation.date)
+    private var savedLocations: [CachedLocation]
+
+    let didSelectLocation: (CachedLocation) -> Void
+
+    init(_ viewModel: ViewModel, didSelectLocation: @escaping (CachedLocation) -> Void) {
+        _viewModel = .init(wrappedValue: viewModel)
+        self.didSelectLocation = didSelectLocation
+    }
 
     var body: some View {
         NavigationStack(path: $viewModel.path) {
             List {
-                ForEach(viewModel.savedLocations, id: \.self) { location in
+                ForEach(savedLocations, id: \.self) { location in
                     Button {
-                        print("Location: \(location)")
+                        didSelectLocation(location)
                     } label: {
-                        Text(location)
+                        Text(location.name)
                         Spacer()
                         Image(systemName: "chevron.right")
                             .foregroundStyle(.secondary)
@@ -71,5 +83,10 @@ struct LocationsView: View {
 }
 
 #Preview {
-    LocationsView()
+    LocationsView(
+        .init(modelContext: SwiftDataManager.previewContainer().mainContext)
+    ) { location in
+        print(location.name)
+    }
+    .modelContainer(SwiftDataManager.previewContainer())
 }
