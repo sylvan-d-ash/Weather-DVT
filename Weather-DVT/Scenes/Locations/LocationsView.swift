@@ -13,7 +13,7 @@ struct LocationsView: View {
 
     @StateObject private var viewModel: ViewModel
 
-    @Query(sort: \CachedLocation.date)
+    @Query(sort: \CachedLocation.name)
     private var savedLocations: [CachedLocation]
 
     let didSelectLocation: (CachedLocation) -> Void

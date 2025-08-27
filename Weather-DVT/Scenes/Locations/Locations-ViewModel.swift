@@ -14,7 +14,6 @@ extension LocationsView {
     @MainActor
     final class ViewModel: ObservableObject {
         @Published var searchText = ""
-        @Published private(set) var savedLocations = ["Nairobi", "Cape Town", "New York"]
         @Published private(set) var searchResults: [SearchLocation] = []
         @Published private(set) var errorMessage: String?
         @Published var path = NavigationPath()
