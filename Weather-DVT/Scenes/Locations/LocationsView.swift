@@ -61,7 +61,7 @@ struct LocationsView: View {
                     .background(.thinMaterial)
                 }
             }
-            .navigationDestination(for: LocationSearchResult.self) { searchResult in
+            .navigationDestination(for: SearchLocation.self) { searchResult in
                 AddLocationView(result: searchResult) { result in
                     viewModel.addLocation(result)
                 }
