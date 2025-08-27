@@ -7,7 +7,6 @@
 
 import Combine
 import Foundation
-import SwiftData
 import SwiftUI
 
 extension WeatherView {
