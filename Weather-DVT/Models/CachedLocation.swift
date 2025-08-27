@@ -17,16 +17,26 @@ final class CachedLocation {
     var latitude: Double
     var longitude: Double
     var date: Date
+    var isCurrentUserLocation: Bool = false
 
     @Relationship(deleteRule: .cascade)
     var weather: CachedWeather?
 
-    init(id: UUID, name: String, region: String, latitude: Double, longitude: Double, date: Date) {
+    init(
+        id: UUID,
+        name: String,
+        region: String,
+        latitude: Double,
+        longitude: Double,
+        date: Date,
+        isCurrentUserLocation: Bool = false
+    ) {
         self.id = id
         self.name = name
         self.region = region
         self.latitude = latitude
         self.longitude = longitude
         self.date = date
+        self.isCurrentUserLocation = isCurrentUserLocation
     }
 }

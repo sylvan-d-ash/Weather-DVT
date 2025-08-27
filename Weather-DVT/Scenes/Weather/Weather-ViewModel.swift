@@ -7,6 +7,7 @@
 
 import Combine
 import Foundation
+import SwiftData
 import SwiftUI
 
 extension WeatherView {
@@ -20,6 +21,8 @@ extension WeatherView {
         @Published private(set) var isLoading = false
         @Published private(set) var errorMessage: String?
 
+        @Published private(set) var location: WeatherLocation?
+
         var backgroundColor: Color {
             weather?.condition.backgroundColor(base: selectedTheme.base) ?? .rainy
         }
@@ -28,33 +31,28 @@ extension WeatherView {
             weather?.condition.backgroundImage(base: selectedTheme.base) ?? "forest_rainy"
         }
 
+        private var locationManager: LocationManager?
+        private var modelContext: ModelContext?
         private let service: WeatherService
-        private let locationManager: LocationManager
         private var cancellables = Set<AnyCancellable>()
 
-        init(service: WeatherService = DefaultWeatherService(), locationManager: LocationManager) {
-            self.service = service
+        init(locationManager: LocationManager, modelContext: ModelContext, service: WeatherService = DefaultWeatherService()) {
             self.locationManager = locationManager
+            self.modelContext = modelContext
+            self.service = service
 
             bindLocation()
         }
 
-        init(
-            service: WeatherService = DefaultWeatherService(),
-            locationManager: LocationManager,
-            result: SearchLocation
-        ) {
+        init(service: WeatherService = DefaultWeatherService(), result: SearchLocation) {
             self.service = service
-            self.locationManager = locationManager
+            self.location = WeatherLocation(from: result)
 
-            Task {
-                let coordinate = result.coordinate
-                await loadWeather(lat: coordinate.latitude, lon: coordinate.longitude)
-            }
+            Task { await loadWeather() }
         }
 
         func requestAuthorization() {
-            locationManager.requestAuthorization()
+            locationManager?.requestAuthorization()
         }
 
         func formatTemperature(_ celcius: Double?) -> String {
@@ -70,12 +68,12 @@ extension WeatherView {
         }
 
         private func bindLocation() {
+            guard let locationManager else { return }
             locationManager.locationPublisher
                 .compactMap { $0 }
                 .sink { [weak self] coordinate in
-                    Task {
-                        await self?.loadWeather(lat: coordinate.latitude, lon: coordinate.longitude)
-                    }
+                    self?.location = WeatherLocation(from: coordinate)
+                    Task { await self?.loadWeather() }
                 }
                 .store(in: &cancellables)
 
@@ -83,7 +81,7 @@ extension WeatherView {
                 .sink { [weak self] status in
                     switch status {
                     case .authorizedAlways, .authorizedWhenInUse:
-                        self?.locationManager.requestLocation()
+                        self?.locationManager?.requestLocation()
                     case .denied, .restricted:
                         self?.errorMessage = "Location access denied. Please enable it in Settings."
                     case .notDetermined:
@@ -101,12 +99,27 @@ extension WeatherView {
                 .store(in: &cancellables)
         }
 
-        private func loadWeather(lat: Double, lon: Double) async {
+        private func loadWeather() async {
+            guard let location else { return }
+
             isLoading = true
             errorMessage = nil
 
-            async let currentWeatherResult = service.fetchCurrentWeather(lat: lat, lon: lon)
-            async let forecastResult = service.fetch5DaysForecast(lat: 33.55, lon: -7.62)
+            // check cache based on location kind
+            if let cachedLocation = loadCachedWeather(for: location), let cachedWeather = cachedLocation.weather {
+                self.weather = Weather(from: cachedWeather)
+                self.isLoading = false
+            }
+
+            // fetch fresh data from API
+            async let currentWeatherResult = service.fetchCurrentWeather(
+                lat: location.latitude,
+                lon: location.longitude
+            )
+            async let forecastResult = service.fetch5DaysForecast(
+                lat: location.latitude,
+                lon: location.longitude
+            )
 
             let (current, forecast) = await (currentWeatherResult, forecastResult)
             isLoading = false
@@ -123,6 +136,22 @@ extension WeatherView {
                 getDailySummaries(from: forecast)
             case .failure(let error):
                 self.errorMessage = error.localizedDescription
+            }
+        }
+
+        private func loadCachedWeather(for location: WeatherLocation) -> CachedLocation? {
+            switch location.kind {
+            case .temporary:
+                // temporary locations (from search results) never have cached data
+                return nil
+            case .saved(let id):
+                // for a favourite, find it by its ID
+                let descriptor = FetchDescriptor<CachedLocation>(predicate: #Predicate { $0.id == id })
+                return try? modelContext?.fetch(descriptor).first
+            case .current:
+                // for current location, find it using the unique flag
+                let descriptor = FetchDescriptor<CachedLocation>(predicate: #Predicate { $0.isCurrentUserLocation })
+                return try? modelContext?.fetch(descriptor).first
             }
         }
 
