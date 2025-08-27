@@ -108,6 +108,9 @@ extension WeatherView {
             // check cache based on location kind
             if let cachedLocation = loadCachedWeather(for: location), let cachedWeather = cachedLocation.weather {
                 self.weather = Weather(from: cachedWeather)
+                self.dailySummaries = cachedLocation.forecast
+                    .map { Weather(from: $0) }
+                    .sorted { $0.date < $1.date }
                 self.isLoading = false
             }
 
@@ -136,24 +139,9 @@ extension WeatherView {
             switch forecast {
             case .success(let forecast):
                 getDailySummaries(from: forecast)
+                updateCache(for: location, with: dailySummaries)
             case .failure(let error):
                 errorMessage = error.localizedDescription
-            }
-        }
-
-        private func loadCachedWeather(for location: WeatherLocation) -> CachedLocation? {
-            switch location.kind {
-            case .temporary:
-                // temporary locations (from search results) never have cached data
-                return nil
-            case .saved(let id):
-                // for a favourite, find it by its ID
-                let descriptor = FetchDescriptor<CachedLocation>(predicate: #Predicate { $0.id == id })
-                return try? modelContext?.fetch(descriptor).first
-            case .current:
-                // for current location, find it using the unique flag
-                let descriptor = FetchDescriptor<CachedLocation>(predicate: #Predicate { $0.isCurrentUserLocation })
-                return try? modelContext?.fetch(descriptor).first
             }
         }
 
@@ -185,22 +173,79 @@ extension WeatherView {
             }.sorted(by: { $0.date < $1.date })
         }
 
-        private func updateCache(for location: WeatherLocation, with freshWeather: Weather) {
-            var locationToUpdate: CachedLocation?
+        private func loadCachedWeather(for location: WeatherLocation) -> CachedLocation? {
+            switch location.kind {
+            case .temporary:
+                // temporary locations (from search results) never have cached data
+                return nil
+            case .saved(let id):
+                // for a favourite, find it by its ID
+                let descriptor = FetchDescriptor<CachedLocation>(predicate: #Predicate { $0.id == id })
+                return try? modelContext?.fetch(descriptor).first
+            case .current:
+                // for current location, find it using the unique flag
+                let descriptor = FetchDescriptor<CachedLocation>(predicate: #Predicate { $0.isCurrentUserLocation })
+                return try? modelContext?.fetch(descriptor).first
+            }
+        }
 
+        private func updateCache(for location: WeatherLocation, with freshWeather: Weather) {
+            guard let locationToUpdate = findOrCreateLocation(for: location) else { return }
+
+            // update or create a new CachedCurrentWeather
+            if let cache = locationToUpdate.weather {
+                cache.currentTempCelcius = freshWeather.currentTempInCelcius
+                cache.minTempCelcius = freshWeather.minTempInCelcius
+                cache.maxTempCelcius = freshWeather.maxTempInCelcius
+                cache.main = freshWeather.main
+                cache.lastUpdated = .now
+            } else {
+                let newCache = CachedCurrentWeather(
+                    currentTempCelcius: freshWeather.currentTempInCelcius,
+                    minTempCelcius: freshWeather.minTempInCelcius,
+                    maxTempCelcius: freshWeather.maxTempInCelcius,
+                    main: freshWeather.main
+                )
+                locationToUpdate.weather = newCache
+            }
+
+            try? modelContext?.save()
+        }
+
+        private func updateCache(for location: WeatherLocation, with summaries: [Weather]) {
+            guard let locationToUpdate = findOrCreateLocation(for: location) else { return }
+
+            // delete old forecasts to ensure no stale data
+            locationToUpdate.forecast.removeAll()
+
+            // create new CachedForecastWeather
+            for summary in summaries {
+                let forecast = CachedForecastWeather(
+                    currentTempCelcius: summary.currentTempInCelcius,
+                    minTempCelcius: summary.minTempInCelcius,
+                    maxTempCelcius: summary.maxTempInCelcius,
+                    main: summary.main,
+                    date: summary.date
+                )
+                forecast.location = locationToUpdate
+                locationToUpdate.forecast.append(forecast)
+            }
+        }
+
+        private func findOrCreateLocation(for location: WeatherLocation) -> CachedLocation? {
             switch location.kind {
             case .temporary:
                 // never save weather for search results
-                return
+                return nil
             case .saved(let id):
                 // use ID
                 let descriptor = FetchDescriptor<CachedLocation>(predicate: #Predicate { $0.id == id })
-                locationToUpdate = try? modelContext?.fetch(descriptor).first
+                return try? modelContext?.fetch(descriptor).first
             case .current:
                 // use unique flag
                 let descriptor = FetchDescriptor<CachedLocation>(predicate: #Predicate { $0.isCurrentUserLocation })
                 if let currentLocation = try? modelContext?.fetch(descriptor).first {
-                    locationToUpdate = currentLocation
+                    return currentLocation
                 } else {
                     // create a new location
                     let newLocation = CachedLocation(
@@ -211,30 +256,9 @@ extension WeatherView {
                         isCurrentUserLocation: true
                     )
                     modelContext?.insert(newLocation)
-                    locationToUpdate = newLocation
+                    return newLocation
                 }
             }
-
-            guard let locationToUpdate else { return }
-
-            // update or create a new CachedWeather
-            if let cache = locationToUpdate.weather {
-                cache.currentTempCelcius = freshWeather.currentTempInCelcius
-                cache.minTempCelcius = freshWeather.minTempInCelcius
-                cache.maxTempCelcius = freshWeather.maxTempInCelcius
-                cache.main = freshWeather.main
-                cache.lastUpdated = .now
-            } else {
-                let newCache = CachedWeather(
-                    currentTempCelcius: freshWeather.currentTempInCelcius,
-                    minTempCelcius: freshWeather.minTempInCelcius,
-                    maxTempCelcius: freshWeather.maxTempInCelcius,
-                    main: freshWeather.main
-                )
-                locationToUpdate.weather = newCache
-            }
-
-            try? modelContext?.save()
         }
     }
 }
