@@ -42,13 +42,32 @@ struct WeatherView: View {
                 .resizable()
                 .frame(maxWidth: .infinity)
 
-            VStack(spacing: 24) {
+            VStack(spacing: 5) {
+                Spacer()
                 Spacer()
 
-                Text(viewModel.formatTemperature(viewModel.weather?.currentTempInCelcius))
+                if viewModel.isUpdatingCache {
+                    ProgressView()
+                        .tint(.white)
+                }
 
-                Text(viewModel.weather?.condition.text ?? "--")
+                if let lastUpdated = viewModel.lastUpdated {
+                    Text(lastUpdated)
+                        .font(.caption)
+                }
 
+                Spacer()
+
+                Text(viewModel.locationName)
+                    .font(.body)
+
+                VStack(spacing: 20) {
+                    Text(viewModel.formatTemperature(viewModel.weather?.currentTempInCelcius))
+
+                    Text(viewModel.weather?.condition.text ?? "--")
+                }
+
+                Spacer()
                 Spacer()
             }
             .font(.system(size: 44, weight: .bold, design: .default))
@@ -148,12 +167,14 @@ private final class MockLocationManager: UserLocationManager {
 }
 
 #Preview {
+    let container = SwiftDataManager.previewContainer()
     WeatherView(
         .init(
             locationManager: MockLocationManager(),
             persistenceService: DefaultPersistenceService(
-                modelContext: SwiftDataManager.previewContainer().mainContext
+                modelContext: container.mainContext
             )
         )
     )
+    .modelContainer(container)
 }
