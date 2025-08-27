@@ -20,7 +20,10 @@ final class CachedLocation {
     var isCurrentUserLocation: Bool = false
 
     @Relationship(deleteRule: .cascade)
-    var weather: CachedWeather?
+    var weather: CachedCurrentWeather?
+
+    @Relationship(deleteRule: .cascade, inverse: \CachedForecastWeather.location)
+    var forecast: [CachedForecastWeather] = []
 
     init(
         id: UUID = UUID(),
