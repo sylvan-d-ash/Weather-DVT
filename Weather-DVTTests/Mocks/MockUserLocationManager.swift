@@ -31,11 +31,11 @@ final class MockUserLocationManager: UserLocationManager {
     }
 
     func requestAuthorization() {
-        didCallRequestLocation = true
+        didCallRequestAuthorization = true
     }
 
     func requestLocation() {
-        didCallRequestLocation = false
+        didCallRequestLocation = true
     }
 
     func simulateLocationUpdate(coordinate: CLLocationCoordinate2D) {
