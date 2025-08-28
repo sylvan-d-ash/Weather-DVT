@@ -37,7 +37,8 @@ struct LocationsViewModelTests {
     func searchPopulatesSearchResults() async {
         searchService.searchResults = .success([location])
 
-        sut.searchText = "Nai"
+        let query = "Nai"
+        sut.searchText = query
 
         // wait for a duration longer than the debounce
         try? await Task.sleep(for: .milliseconds(400))
@@ -46,18 +47,21 @@ struct LocationsViewModelTests {
         #expect(sut.searchResults.count == 1)
         #expect(sut.searchResults.first?.name == location.name)
         #expect(sut.errorMessage == nil)
+        #expect(searchService.query == query)
     }
 
     @Test("search sets error message on failure")
     func searchSetsErrorMessageOnFailure() async {
         searchService.searchResults = .failure(MockTestError.dummyError)
 
-        sut.searchText = "Invalid"
+        let query = "Invalid"
+        sut.searchText = query
 
         try? await Task.sleep(for: .milliseconds(400))
 
         #expect(sut.searchResults.isEmpty)
         #expect(sut.errorMessage != nil)
+        #expect(searchService.query == query)
     }
 
     @Test("navigate to result")
