@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-struct Weather: Identifiable {
+struct Weather: Identifiable, Equatable {
     enum Condition {
         case sunny
         case rainy

@@ -11,6 +11,7 @@ import Foundation
 @MainActor
 final class MockPersistenceService: PersistenceService {
     var mockCachedLocation: CachedLocation?
+    private(set) var didCallFetchCachedWeatherForLocation = false
     private(set) var didCallUpdateCacheForFreshWeather = false
     private(set) var didCallUpdateCacheForSummaries = false
     private(set) var freshWeatherLocation: WeatherLocation?
@@ -19,6 +20,7 @@ final class MockPersistenceService: PersistenceService {
     private(set) var freshWeather: Weather?
 
     func fetchCachedWeather(for location: WeatherLocation) -> CachedLocation? {
+        didCallFetchCachedWeatherForLocation = true
         return mockCachedLocation
     }
 
