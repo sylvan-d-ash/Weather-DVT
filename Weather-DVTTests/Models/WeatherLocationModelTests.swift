@@ -12,7 +12,7 @@ import Testing
 @MainActor
 struct WeatherLocationModelTests {
     @Test("initialize from coordinate")
-    func initializeFromCoordinate() {
+    func testInitializeFromCoordinate() {
         let sut = WeatherLocation(from: .init(latitude: 1, longitude: 1))
         #expect(sut.id == "current")
         #expect(sut.latitude == 1)
@@ -21,7 +21,7 @@ struct WeatherLocationModelTests {
     }
 
     @Test("initialize from SearchLocation")
-    func initializeFromSearchLocation() {
+    func testInitializeFromSearchLocation() {
         let location = SearchLocation(
             name: "Nairobi",
             region: "",
@@ -37,7 +37,7 @@ struct WeatherLocationModelTests {
     }
 
     @Test("initialize from CachedLocation")
-    func initializeFromCachedLocation() {
+    func testInitializeFromCachedLocation() {
         let location = CachedLocation(
             name: "Nairobi",
             region: "",

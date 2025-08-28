@@ -17,21 +17,21 @@ struct WeatherConditionTests {
     let cloudy = Weather.Condition.cloudy
 
     @Test("'text' returns the correct uppercase string")
-    func textUppercase() {
+    func testTextUppercase() {
         #expect(sunny.text == "SUNNY")
         #expect(rainy.text == "RAINY")
         #expect(cloudy.text == "CLOUDY")
     }
 
     @Test("'icon' returns the correct asset name")
-    func iconName() {
+    func testIconName() {
         #expect(sunny.icon == "clear")
         #expect(rainy.icon == "rain")
         #expect(cloudy.icon == "partlysunny")
     }
 
     @Test("'backgroundColor' returns the correct color")
-    func backgroundColor() {
+    func testBackgroundColor() {
         #expect(sunny.backgroundColor() == Color("forest_sunny"))
         #expect(rainy.backgroundColor() == Color.rainy)
         #expect(cloudy.backgroundColor() == Color("forest_cloudy"))
@@ -43,7 +43,7 @@ struct WeatherConditionTests {
     }
 
     @Test("'backgroundImage' returns correct asset name")
-    func backgroundImage() {
+    func testBackgroundImage() {
         #expect(sunny.backgroundImage() == "forest_sunny")
         #expect(rainy.backgroundImage() == "forest_rainy")
         #expect(cloudy.backgroundImage() == "forest_cloudy")
