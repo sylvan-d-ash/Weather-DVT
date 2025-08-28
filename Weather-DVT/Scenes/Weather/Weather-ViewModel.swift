@@ -42,22 +42,24 @@ extension WeatherView {
         private var cancellables = Set<AnyCancellable>()
 
         init(
-            locationManager: UserLocationManager,
-            persistenceService: PersistenceService,
-            service: WeatherService = DefaultWeatherService()
+            locationManager: UserLocationManager? = nil,
+            persistenceService: PersistenceService? = nil,
+            service: WeatherService = DefaultWeatherService(),
+            searchResult: SearchLocation? = nil
         ) {
             self.locationManager = locationManager
             self.persistenceService = persistenceService
             self.service = service
 
-            bindLocation()
-        }
+            if locationManager != nil {
+                bindLocation()
+            }
 
-        init(service: WeatherService = DefaultWeatherService(), result: SearchLocation) {
-            self.service = service
-            self.location = WeatherLocation(from: result)
+            if let searchResult = searchResult {
+                self.location = WeatherLocation(from: searchResult)
 
-            Task { await loadWeather() }
+                Task { await loadWeather() }
+            }
         }
 
         func requestAuthorization() {
