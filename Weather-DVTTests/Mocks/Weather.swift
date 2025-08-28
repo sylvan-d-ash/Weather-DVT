@@ -18,6 +18,16 @@ extension Weather {
             maxTempInCelcius: 26
         )
     }
+
+    static func mock(main: String?) -> Weather {
+        .init(
+            date: .now,
+            main: main,
+            currentTempInCelcius: 25,
+            minTempInCelcius: 19,
+            maxTempInCelcius: 26
+        )
+    }
 }
 
 extension Forecast {
