@@ -15,7 +15,7 @@ struct AddLocationView: View {
         WeatherView(
             .init(
                 service: DefaultWeatherService(),
-                result: result
+                searchResult: result
             )
         )
         .toolbar {
