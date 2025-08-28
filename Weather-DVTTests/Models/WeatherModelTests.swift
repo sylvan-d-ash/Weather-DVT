@@ -12,7 +12,7 @@ import Testing
 @MainActor
 struct WeatherModelTests {
     @Test("condition from API maps correctly")
-    func conditionFromAPI() {
+    func testConditionFromAPI() {
         #expect(Weather.mock(main: nil).condition == .sunny)
         #expect(Weather.mock(main: "unknown").condition == .sunny)
         #expect(Weather.mock(main: "clear").condition == .sunny)
@@ -25,7 +25,7 @@ struct WeatherModelTests {
     }
 
     @Test("initialize from CachedCurrentWeather")
-    func initializeFromCachedCurrentWeather() {
+    func testInitializeFromCachedCurrentWeather() {
         let weather = CachedCurrentWeather(
             currentTempCelcius: 22.5,
             minTempCelcius: 18.0,
@@ -41,7 +41,7 @@ struct WeatherModelTests {
     }
 
     @Test("initialize from CachedForecastWeather")
-    func initializeFromCachedForecastWeather() {
+    func testInitializeFromCachedForecastWeather() {
         let weather = CachedCurrentWeather(
             currentTempCelcius: 22.5,
             minTempCelcius: 18.0,
