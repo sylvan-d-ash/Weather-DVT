@@ -34,9 +34,22 @@
 		04DCD3082E5B71CB00216A0D /* secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = secrets.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		04307C162E61AB5100CE74EE /* Exceptions for "Weather-DVT" folder in "Weather-DVT" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 04DCD2962E59EA7500216A0D /* Weather-DVT */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		04DCD2992E59EA7500216A0D /* Weather-DVT */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				04307C162E61AB5100CE74EE /* Exceptions for "Weather-DVT" folder in "Weather-DVT" target */,
+			);
 			path = "Weather-DVT";
 			sourceTree = "<group>";
 		};
@@ -405,6 +418,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Weather-DVT/Info.plist";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We use your location to show local weather forecast.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -444,6 +458,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Weather-DVT/Info.plist";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We use your location to show local weather forecast.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;

@@ -26,7 +26,7 @@ final class URLSessionNetworkService: NetworkService {
     private let baseURLString = "https://api.openweathermap.org"
 
     private static var apiKey: String {
-        guard let key = ProcessInfo.processInfo.environment["API_KEY"] else {
+        guard let key = Bundle.main.infoDictionary?["API_KEY"] as? String else {
             fatalError("Missing API Key!")
         }
         return key
