@@ -78,6 +78,8 @@ final class DefaultPersistenceService: PersistenceService {
             forecast.location = locationToUpdate
             locationToUpdate.forecast.append(forecast)
         }
+
+        try? modelContext.save()
     }
 
     private func findOrCreateLocation(for location: WeatherLocation) -> CachedLocation? {

@@ -1,0 +1,42 @@
+{
+  "configurations" : [
+    {
+      "id" : "58259F6F-6B4D-4E43-8C8C-1862625B3372",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "environmentVariableEntries" : [
+      {
+        "key" : "API_KEY",
+        "value" : "$(API_KEY)"
+      }
+    ],
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:Weather-DVT.xcodeproj",
+      "identifier" : "04DCD2962E59EA7500216A0D",
+      "name" : "Weather-DVT"
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:Weather-DVT.xcodeproj",
+        "identifier" : "04DCD2A42E59EA7700216A0D",
+        "name" : "Weather-DVTTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Weather-DVT.xcodeproj",
+        "identifier" : "04DCD2AE2E59EA7700216A0D",
+        "name" : "Weather-DVTUITests"
+      }
+    }
+  ],
+  "version" : 1
+}

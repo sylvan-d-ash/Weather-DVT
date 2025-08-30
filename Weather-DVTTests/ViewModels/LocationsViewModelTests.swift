@@ -7,7 +7,6 @@
 
 import Foundation
 import Testing
-import SwiftData
 @testable import Weather_DVT
 
 @MainActor
@@ -24,8 +23,12 @@ struct LocationsViewModelTests {
     }
 
     @Test("empty search")
-    func testEmptySearch() {
+    func testEmptySearch() async {
         sut.searchText = ""
+
+        // wait for a duration longer than the debounce
+        try? await Task.sleep(for: .milliseconds(400))
+
         #expect(sut.searchResults.isEmpty)
         #expect(sut.errorMessage == nil)
     }
@@ -155,7 +158,7 @@ struct LocationsViewModelTests {
     @Test("delete locations sets error message when database action fails")
     func testDeleteLocationsFail() {
         modelContext.shouldThrowOnSaveError = true
-        
+
         let offsets: IndexSet = [0]
         let allLocations = [CachedLocation.mock(name: "Nairobi")]
         sut.deleteLocations(at: offsets, from: allLocations)
