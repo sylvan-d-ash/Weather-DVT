@@ -1,5 +1,5 @@
 //
-//  Weather.swift
+//  MockModels.swift
 //  Weather-DVTTests
 //
 //  Created by Sylvan  on 28/08/2025.
@@ -44,6 +44,17 @@ extension Forecast {
                     maxTempInCelcius: 26
                 )
             ]
+        )
+    }
+}
+
+extension CachedLocation {
+    static func mock(name: String) -> CachedLocation {
+        .init(
+            name: name,
+            region: "",
+            latitude: 1,
+            longitude: 1
         )
     }
 }
