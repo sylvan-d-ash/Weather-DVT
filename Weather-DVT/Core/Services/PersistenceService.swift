@@ -8,6 +8,16 @@
 import Foundation
 import SwiftData
 
+protocol ModelContextProtocol {
+    func fetch<T>(_ descriptor: FetchDescriptor<T>) throws -> [T] where T: PersistentModel
+    func fetchCount<T>(_ descriptor: FetchDescriptor<T>) throws -> Int where T: PersistentModel
+    func insert<T>(_ model: T) where T: PersistentModel
+    func delete<T>(_ model: T) where T : PersistentModel
+    func save() throws
+}
+
+extension ModelContext: ModelContextProtocol {}
+
 @MainActor
 protocol  PersistenceService {
     func fetchCachedWeather(for location: WeatherLocation) -> CachedLocation?
@@ -17,9 +27,9 @@ protocol  PersistenceService {
 
 @MainActor
 final class DefaultPersistenceService: PersistenceService {
-    private let modelContext: ModelContext
+    private let modelContext: ModelContextProtocol
 
-    init(modelContext: ModelContext) {
+    init(modelContext: ModelContextProtocol) {
         self.modelContext = modelContext
     }
 

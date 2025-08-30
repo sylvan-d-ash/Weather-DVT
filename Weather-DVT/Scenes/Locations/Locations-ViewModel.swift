@@ -19,10 +19,10 @@ extension LocationsView {
         @Published var path = NavigationPath()
 
         private let mapService: MapSearchService
-        private let modelContext: ModelContext
+        private let modelContext: ModelContextProtocol
         private var cancellables = Set<AnyCancellable>()
 
-        init(mapService: MapSearchService = DefaultMapSearchService(), modelContext: ModelContext) {
+        init(mapService: MapSearchService = DefaultMapSearchService(), modelContext: ModelContextProtocol) {
             self.mapService = mapService
             self.modelContext = modelContext
             bindSearchText()
@@ -33,28 +33,46 @@ extension LocationsView {
         }
 
         func addLocation(_ result: SearchLocation) {
+            errorMessage = nil
+
             // check for duplicates
             let name = result.name
             let descriptor = FetchDescriptor<CachedLocation>(predicate: #Predicate { $0.name == name })
 
-            if let items = try? modelContext.fetch(descriptor), items.isEmpty {
-                let location = CachedLocation(
-                    name: result.name,
-                    region: result.region,
-                    latitude: result.coordinate.latitude,
-                    longitude: result.coordinate.longitude
-                )
-                modelContext.insert(location)
-            }
+            do {
+                let count = try modelContext.fetchCount(descriptor)
+                if count == 0 {
+                    let location = CachedLocation(
+                        name: result.name,
+                        region: result.region,
+                        latitude: result.coordinate.latitude,
+                        longitude: result.coordinate.longitude
+                    )
+                    modelContext.insert(location)
+                    try modelContext.save()
+                }
 
-            searchText = ""
-            popToRoot()
+                searchText = ""
+                popToRoot()
+            } catch {
+                print("Failed to add location: \(error.localizedDescription)")
+                errorMessage = error.localizedDescription
+            }
         }
 
         func deleteLocations(at offsets: IndexSet, from savedLocations: [CachedLocation]) {
             for index in offsets {
                 let location = savedLocations[index]
                 modelContext.delete(location)
+            }
+
+            errorMessage = nil
+
+            do {
+                try modelContext.save()
+            } catch {
+                print("Failed to delete location(s): \(error.localizedDescription)")
+                errorMessage = error.localizedDescription
             }
         }
 
