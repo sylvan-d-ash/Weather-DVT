@@ -28,6 +28,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		04059B692E632AE100011811 /* Weather-DVT.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Weather-DVT.xctestplan"; sourceTree = "<group>"; };
 		04DCD2972E59EA7500216A0D /* Weather-DVT.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Weather-DVT.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		04DCD2A52E59EA7700216A0D /* Weather-DVTTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Weather-DVTTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		04DCD2AF2E59EA7700216A0D /* Weather-DVTUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Weather-DVTUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -93,6 +94,7 @@
 		04DCD28E2E59EA7500216A0D = {
 			isa = PBXGroup;
 			children = (
+				04059B692E632AE100011811 /* Weather-DVT.xctestplan */,
 				04DCD3082E5B71CB00216A0D /* secrets.xcconfig */,
 				04DCD2992E59EA7500216A0D /* Weather-DVT */,
 				04DCD2A82E59EA7700216A0D /* Weather-DVTTests */,

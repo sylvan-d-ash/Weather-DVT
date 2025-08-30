@@ -13,6 +13,7 @@ final class MockModelContext: ModelContextProtocol {
     var shouldThrowOnFetchCountError = false
     var shouldThrowOnSaveError = false
     var mockCountResult = 0
+    var mockFetchResult: [any PersistentModel] = []
 
     private(set) var didCallFetch = false
     private(set) var didCallFetchCount = false
@@ -24,9 +25,9 @@ final class MockModelContext: ModelContextProtocol {
 
     func fetch<T>(_ descriptor: FetchDescriptor<T>) throws -> [T] where T : PersistentModel {
         didCallFetch = true
-        return []
+        return mockFetchResult.compactMap { $0 as? T }
     }
-    
+
     func fetchCount<T>(_ descriptor: FetchDescriptor<T>) throws -> Int where T : PersistentModel {
         didCallFetchCount = true
         if shouldThrowOnFetchCountError {
@@ -34,17 +35,17 @@ final class MockModelContext: ModelContextProtocol {
         }
         return mockCountResult
     }
-    
+
     func insert<T>(_ model: T) where T : PersistentModel {
         didCallInsert = true
         insertedObjects.append(model)
     }
-    
+
     func delete<T>(_ model: T) where T : PersistentModel {
         didCallDelete = true
         deleteObjects.append(model)
     }
-    
+
     func save() throws {
         didCallSave = true
         if shouldThrowOnSaveError {
