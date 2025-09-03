@@ -87,7 +87,7 @@ extension CachedForecastWeather {
     }
 }
 
-struct MockPlacemark: PlacemarkProtocol {
+struct MockPlacemark: PlacemarkForCL {
     var locality: String?
     var administrativeArea: String?
 }

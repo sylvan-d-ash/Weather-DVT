@@ -9,7 +9,7 @@ import Foundation
 import MapKit
 
 // MARK: - MKPlacemark
-protocol Placemark {
+protocol PlacemarkForMK {
     var locality: String? { get }
     var thoroughfare: String? { get }
     var administrativeArea: String? { get }
@@ -17,17 +17,17 @@ protocol Placemark {
     var coordinate: CLLocationCoordinate2D { get }
 }
 
-extension MKPlacemark: Placemark {}
+extension MKPlacemark: PlacemarkForMK {}
 
 // MARK: - MKMapItem
 protocol MapItem {
     var name: String? { get }
-    var localPlacemark: Placemark { get }
+    var localPlacemark: PlacemarkForMK { get }
     var pointOfInterestCategory: MKPointOfInterestCategory? { get }
 }
 
 extension MKMapItem: MapItem {
-    var localPlacemark: any Placemark { self.placemark }
+    var localPlacemark: any PlacemarkForMK { self.placemark }
 }
 
 // MARK: - MKLocalSearch.Response
