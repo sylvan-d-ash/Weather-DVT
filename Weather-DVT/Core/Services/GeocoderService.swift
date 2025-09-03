@@ -8,11 +8,22 @@
 import Foundation
 import CoreLocation
 
-protocol CLGeocoderProtocol {
-    func reverseGeocodeLocation(_ location: CLLocation) async throws -> [CLPlacemark]
+protocol PlacemarkProtocol {
+    var locality: String? { get }
+    var administrativeArea: String? { get }
 }
 
-extension CLGeocoder: CLGeocoderProtocol {}
+extension CLPlacemark: PlacemarkProtocol {}
+
+protocol CLGeocoderProtocol {
+    func reverseGeocode(location: CLLocation) async throws -> [PlacemarkProtocol]
+}
+
+extension CLGeocoder: CLGeocoderProtocol {
+    func reverseGeocode(location: CLLocation) async throws -> [PlacemarkProtocol] {
+        return try await reverseGeocodeLocation(location)
+    }
+}
 
 protocol GeocoderService: AnyObject {
     func locationDetails(for location: CLLocation) async -> (city: String, region: String)?
