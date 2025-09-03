@@ -8,41 +8,96 @@
 import Foundation
 import MapKit
 
+// MARK: - MKPlacemark
+protocol Placemark {
+    var locality: String? { get }
+    var thoroughfare: String? { get }
+    var administrativeArea: String? { get }
+    var country: String? { get }
+    var coordinate: CLLocationCoordinate2D { get }
+}
+
+extension MKPlacemark: Placemark {}
+
+// MARK: - MKMapItem
+protocol MapItem {
+    var name: String? { get }
+    var localPlacemark: Placemark { get }
+    var pointOfInterestCategory: MKPointOfInterestCategory? { get }
+}
+
+extension MKMapItem: MapItem {
+    var localPlacemark: any Placemark { self.placemark }
+}
+
+// MARK: - MKLocalSearch.Response
+protocol LocalSearchResponse {
+    var localMapItems: [MapItem] { get }
+}
+
+extension MKLocalSearch.Response: LocalSearchResponse {
+    var localMapItems: [any MapItem] { self.mapItems }
+}
+
+// MARK: - MKLocalSearch
+protocol MKLocalSearchProtocol: AnyObject {
+    func localStart() async throws -> LocalSearchResponse
+}
+
+extension MKLocalSearch: MKLocalSearchProtocol {
+    func localStart() async throws -> any LocalSearchResponse {
+        return try await start() as LocalSearchResponse
+    }
+}
+
+// MARK: - MapSearchService
 protocol MapSearchService: AnyObject {
     func search(for query: String) async -> Result<[SearchLocation], Error>
 }
 
 final class DefaultMapSearchService: MapSearchService {
+    typealias SearchMaker = (MKLocalSearch.Request) -> MKLocalSearchProtocol
+
+    private let searchMaker: SearchMaker
+
+    init(searchMaker: @escaping SearchMaker = { request in MKLocalSearch(request: request) }) {
+        self.searchMaker = searchMaker
+    }
+
     func search(for query: String) async -> Result<[SearchLocation], any Error> {
         let request = MKLocalSearch.Request()
         request.naturalLanguageQuery = query
         request.resultTypes = .pointOfInterest
 
+        let search = searchMaker(request)
+
         do {
-            let response = try await MKLocalSearch(request: request).start()
-            let results = response.mapItems.compactMap { item -> SearchLocation? in
-                guard let name = item.name, let location = item.placemark.location else {
+            let response = try await search.localStart()
+            let results = response.localMapItems.compactMap { item -> SearchLocation? in
+                guard let name = item.name else {
                     return nil
                 }
 
+                let placemark = item.localPlacemark
+
                 // restrict to only airports or towns
-                guard (item.placemark.locality != nil && item.placemark.thoroughfare == nil) ||
+                guard (placemark.locality != nil && placemark.thoroughfare == nil) ||
                         (item.pointOfInterestCategory == .airport) else {
                     return nil
                 }
 
                 var region = ""
-                if let administrativeArea = item.placemark.administrativeArea {
+                if let administrativeArea = placemark.administrativeArea {
                     region = administrativeArea
                 }
-                if let country = item.placemark.country {
+                if let country = placemark.country {
                     region = region.isEmpty ? country : "\(region), \(country)"
                 }
 
                 return .init(
                     name: name,
                     region: region,
-                    coordinate: location.coordinate
+                    coordinate: placemark.coordinate
                 )
             }
             return .success(results)
