@@ -86,3 +86,8 @@ extension CachedForecastWeather {
         )
     }
 }
+
+struct MockPlacemark: PlacemarkProtocol {
+    var locality: String?
+    var administrativeArea: String?
+}
