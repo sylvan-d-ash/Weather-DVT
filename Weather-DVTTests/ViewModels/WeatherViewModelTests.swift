@@ -12,11 +12,13 @@ import Testing
 @MainActor
 struct WeatherViewModelTests {
     var sut: WeatherView.ViewModel!
+    var geocoderService: MockGeocoderService!
     var locationManager: MockUserLocationManager!
-    var weatherService: MockWeatherService!
     var persistenceService: MockPersistenceService!
+    var weatherService: MockWeatherService!
 
     init() {
+        geocoderService = MockGeocoderService()
         locationManager = MockUserLocationManager()
         weatherService = MockWeatherService()
         persistenceService = MockPersistenceService()
@@ -25,6 +27,7 @@ struct WeatherViewModelTests {
     @Test("request authorization")
     mutating func testRequestAuthorization() {
         sut = .init(
+            geocoderService: geocoderService,
             locationManager: locationManager,
             persistenceService: persistenceService,
             service: weatherService
@@ -38,6 +41,7 @@ struct WeatherViewModelTests {
     @Test("authorization denied")
     mutating func testAuthorizationDenied() {
         sut = .init(
+            geocoderService: geocoderService,
             locationManager: locationManager,
             persistenceService: persistenceService,
             service: weatherService
@@ -52,6 +56,7 @@ struct WeatherViewModelTests {
     @Test("authorization granted")
     mutating func testAuthorizationGratend() {
         sut = .init(
+            geocoderService: geocoderService,
             locationManager: locationManager,
             persistenceService: persistenceService,
             service: weatherService
@@ -66,6 +71,7 @@ struct WeatherViewModelTests {
     @Test("location error")
     mutating func testLocationError() {
         sut = .init(
+            geocoderService: geocoderService,
             locationManager: locationManager,
             persistenceService: persistenceService,
             service: weatherService
@@ -75,11 +81,18 @@ struct WeatherViewModelTests {
         locationManager.simulateError(message: error)
 
         #expect(sut.errorMessage == error)
+        #expect(geocoderService.didCallLocationDetails == false)
+        #expect(persistenceService.didCallFetchCachedWeatherForLocation == false)
+        #expect(persistenceService.didCallUpdateCacheForFreshWeather == false)
+        #expect(persistenceService.didCallUpdateCacheForSummaries == false)
+        #expect(weatherService.fetchCurrentWeatherLat == nil)
+        #expect(weatherService.fetch5DaysForecastLat == nil)
     }
 
     @Test("location update")
     mutating func testLocationUpdate() {
         sut = .init(
+            geocoderService: geocoderService,
             locationManager: locationManager,
             persistenceService: persistenceService,
             service: weatherService
@@ -94,6 +107,7 @@ struct WeatherViewModelTests {
     @Test("load weather without cache")
     mutating func testLoadWeatherWithoutCache() async {
         sut = .init(
+            geocoderService: geocoderService,
             locationManager: locationManager,
             persistenceService: persistenceService,
             service: weatherService
@@ -126,6 +140,7 @@ struct WeatherViewModelTests {
     @Test("load weather with cache")
     mutating func testLoadWeatherWithCache() async {
         sut = .init(
+            geocoderService: geocoderService,
             locationManager: locationManager,
             persistenceService: persistenceService,
             service: weatherService
@@ -208,6 +223,7 @@ struct WeatherViewModelTests {
     @Test("update location")
     mutating func updateLocation() async {
         sut = .init(
+            geocoderService: geocoderService,
             locationManager: locationManager,
             persistenceService: persistenceService,
             service: weatherService
@@ -250,6 +266,7 @@ struct WeatherViewModelTests {
     @Test("correctly convert and format temperature")
     mutating func testFormatTemperature() {
         sut = .init(
+            geocoderService: geocoderService,
             locationManager: locationManager,
             persistenceService: persistenceService,
             service: weatherService

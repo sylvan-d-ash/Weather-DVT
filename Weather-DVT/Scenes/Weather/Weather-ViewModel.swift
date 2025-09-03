@@ -8,6 +8,7 @@
 import Combine
 import Foundation
 import SwiftUI
+import CoreLocation
 
 extension WeatherView {
     @MainActor
@@ -36,16 +37,19 @@ extension WeatherView {
             location?.name ?? "--"
         }
 
+        private var geocoderService: GeocoderService?
         private var locationManager: UserLocationManager?
         private var persistenceService: PersistenceService?
         private let service: WeatherService
         private var cancellables = Set<AnyCancellable>()
 
         init(
+            geocoderService: GeocoderService = DefaultGeocoderService(),
             locationManager: UserLocationManager,
             persistenceService: PersistenceService,
             service: WeatherService = DefaultWeatherService()
         ) {
+            self.geocoderService = geocoderService
             self.locationManager = locationManager
             self.persistenceService = persistenceService
             self.service = service
@@ -89,9 +93,10 @@ extension WeatherView {
             guard let locationManager else { return }
             locationManager.locationPublisher
                 .compactMap { $0 }
-                .sink { [weak self] coordinate in
-                    self?.location = WeatherLocation(from: coordinate)
-                    Task { await self?.loadWeather() }
+                .sink { [weak self] location in
+                    Task {
+                        await self?.handleLocationUpdate(location)
+                    }
                 }
                 .store(in: &cancellables)
 
@@ -115,6 +120,17 @@ extension WeatherView {
                     self?.errorMessage = message
                 }
                 .store(in: &cancellables)
+        }
+
+        private func handleLocationUpdate(_ location: CLLocation) async {
+            self.location = WeatherLocation(from: location.coordinate)
+
+            async let geocodeTask = geocoderService?.locationDetails(for: location)
+            async let weatherTask: () = loadWeather()
+
+            await weatherTask
+            let details = await geocodeTask
+            self.location?.name = details?.city ?? ""
         }
 
         private func loadWeather() async {
