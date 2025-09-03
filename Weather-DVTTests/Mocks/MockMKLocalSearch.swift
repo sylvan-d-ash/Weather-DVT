@@ -9,7 +9,7 @@ import Foundation
 import MapKit
 @testable import Weather_DVT
 
-struct MockMapPlacemark: Placemark {
+struct MockMapPlacemark: PlacemarkForMK {
     var locality: String? = nil
     var thoroughfare: String? = nil
     var administrativeArea: String? = nil
@@ -19,7 +19,7 @@ struct MockMapPlacemark: Placemark {
 
 struct MockMapItem: MapItem {
     var name: String?
-    var localPlacemark: Placemark
+    var localPlacemark: PlacemarkForMK
     var pointOfInterestCategory: MKPointOfInterestCategory?
 }
 

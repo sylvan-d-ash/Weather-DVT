@@ -9,20 +9,20 @@ import Foundation
 import CoreLocation
 
 // MARK: - CLPlacemark
-protocol PlacemarkProtocol {
+protocol PlacemarkForCL {
     var locality: String? { get }
     var administrativeArea: String? { get }
 }
 
-extension CLPlacemark: PlacemarkProtocol {}
+extension CLPlacemark: PlacemarkForCL {}
 
 // MARK: - CLGeocoder
 protocol CLGeocoderProtocol {
-    func reverseGeocode(location: CLLocation) async throws -> [PlacemarkProtocol]
+    func reverseGeocode(location: CLLocation) async throws -> [PlacemarkForCL]
 }
 
 extension CLGeocoder: CLGeocoderProtocol {
-    func reverseGeocode(location: CLLocation) async throws -> [PlacemarkProtocol] {
+    func reverseGeocode(location: CLLocation) async throws -> [PlacemarkForCL] {
         return try await reverseGeocodeLocation(location)
     }
 }
