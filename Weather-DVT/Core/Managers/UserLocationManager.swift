@@ -10,7 +10,7 @@ import CoreLocation
 import Foundation
 
 protocol UserLocationManager: AnyObject {
-    var locationPublisher: AnyPublisher<CLLocationCoordinate2D?, Never> { get }
+    var locationPublisher: AnyPublisher<CLLocation?, Never> { get }
     var authorizationStatusPublisher: AnyPublisher<CLAuthorizationStatus, Never> { get }
     var errorMessagePublisher: AnyPublisher<String?, Never> { get }
 
@@ -19,11 +19,11 @@ protocol UserLocationManager: AnyObject {
 }
 
 final class DefaultUserLocationManager: NSObject, ObservableObject, UserLocationManager {
-    @Published private var location: CLLocationCoordinate2D?
+    @Published private var location: CLLocation?
     @Published private var authorizationStatus: CLAuthorizationStatus = .notDetermined
     @Published private var errorMessage: String?
 
-    var locationPublisher: AnyPublisher<CLLocationCoordinate2D?, Never> {
+    var locationPublisher: AnyPublisher<CLLocation?, Never> {
         $location.eraseToAnyPublisher()
     }
 
@@ -55,7 +55,7 @@ final class DefaultUserLocationManager: NSObject, ObservableObject, UserLocation
 
 extension DefaultUserLocationManager: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        location = locations.first?.coordinate
+        location = locations.last
     }
 
     func locationManager(_ manager: CLLocationManager, didFailWithError error: any Error) {

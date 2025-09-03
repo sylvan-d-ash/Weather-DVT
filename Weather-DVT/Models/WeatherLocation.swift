@@ -16,7 +16,7 @@ struct WeatherLocation: Identifiable, Hashable {
     }
 
     let id: String
-    let name: String
+    var name: String
     let region: String
     let latitude: Double
     let longitude: Double
@@ -26,7 +26,7 @@ struct WeatherLocation: Identifiable, Hashable {
 extension WeatherLocation {
     init(from clLocation: CLLocationCoordinate2D) {
         id = "current"
-        name = "" // TODO: use reverse geocoder
+        name = ""
         region = ""
         latitude = clLocation.latitude
         longitude = clLocation.longitude
