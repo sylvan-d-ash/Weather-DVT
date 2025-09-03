@@ -130,7 +130,7 @@ extension WeatherView {
 
             await weatherTask
             let details = await geocodeTask
-            self.location?.name = details?.city ?? ""
+            self.location?.name = details?.city ?? "--"
         }
 
         private func loadWeather() async {
