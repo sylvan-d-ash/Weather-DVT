@@ -14,11 +14,11 @@ final class MockUserLocationManager: UserLocationManager {
     private(set) var didCallRequestAuthorization = false
     private(set) var didCallRequestLocation = false
 
-    private let locationSubject = PassthroughSubject<CLLocationCoordinate2D?, Never>()
+    private let locationSubject = PassthroughSubject<CLLocation?, Never>()
     private let authSubject = PassthroughSubject<CLAuthorizationStatus, Never>()
     private let errorSubject = PassthroughSubject<String?, Never>()
 
-    var locationPublisher: AnyPublisher<CLLocationCoordinate2D?, Never> {
+    var locationPublisher: AnyPublisher<CLLocation?, Never> {
         locationSubject.eraseToAnyPublisher()
     }
 
@@ -39,7 +39,7 @@ final class MockUserLocationManager: UserLocationManager {
     }
 
     func simulateLocationUpdate(coordinate: CLLocationCoordinate2D) {
-        locationSubject.send(coordinate)
+        locationSubject.send(CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude))
     }
 
     func simulateAuthorizationChange(status: CLAuthorizationStatus) {
