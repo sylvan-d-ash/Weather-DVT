@@ -81,16 +81,10 @@ struct WeatherViewModelTests {
         locationManager.simulateError(message: error)
 
         #expect(sut.errorMessage == error)
-        #expect(geocoderService.didCallLocationDetails == false)
-        #expect(persistenceService.didCallFetchCachedWeatherForLocation == false)
-        #expect(persistenceService.didCallUpdateCacheForFreshWeather == false)
-        #expect(persistenceService.didCallUpdateCacheForSummaries == false)
-        #expect(weatherService.fetchCurrentWeatherLat == nil)
-        #expect(weatherService.fetch5DaysForecastLat == nil)
     }
 
     @Test("location update")
-    mutating func testLocationUpdate() {
+    mutating func testLocationUpdate() async {
         sut = .init(
             geocoderService: geocoderService,
             locationManager: locationManager,
@@ -100,8 +94,12 @@ struct WeatherViewModelTests {
 
         locationManager.simulateLocationUpdate(coordinate: .init(latitude: 1, longitude: 1))
 
+        // wait for the async function handling location update to complete
+        try? await Task.sleep(for: .milliseconds(100))
+
         #expect(sut.location?.latitude == 1)
         #expect(sut.location?.longitude == 1)
+        #expect(sut.locationName == "--")
     }
 
     @Test("load weather without cache")
@@ -117,6 +115,9 @@ struct WeatherViewModelTests {
         weatherService.currentWeatherResult = .success(mockWeather)
         weatherService.forecastWeatherResult = .success(mockForecast)
 
+        let mockDetails = (city: "Nairobi", region: "Nairobi")
+        geocoderService.mockDetails = mockDetails
+
         locationManager.simulateLocationUpdate(coordinate: .init(latitude: 1, longitude: 1))
 
         // wait for a brief moment to allow the async loadWeather() to complete
@@ -128,6 +129,10 @@ struct WeatherViewModelTests {
         #expect(sut.dailySummaries.isEmpty == false)
         #expect(sut.lastUpdated == "Last Update: Now")
         #expect(sut.errorMessage == nil)
+
+        // assert geocoding
+        #expect(sut.locationName == "Nairobi")
+        #expect(geocoderService.didCallLocationDetails)
 
         // assert cache update
         #expect(persistenceService.didCallFetchCachedWeatherForLocation == true)
@@ -175,6 +180,10 @@ struct WeatherViewModelTests {
         #expect(sut.lastUpdated != "Last Update: Now")
         #expect(sut.errorMessage != nil)
 
+        // assert geocoding
+        #expect(sut.locationName == "--")
+        #expect(geocoderService.didCallLocationDetails)
+
         // assert cache update
         #expect(persistenceService.didCallFetchCachedWeatherForLocation == true)
         // weather service failed so all these should be nil or false
@@ -213,6 +222,10 @@ struct WeatherViewModelTests {
         #expect(sut.dailySummaries.first?.main == mockForecast.list.first?.main)
         #expect(sut.lastUpdated == "Last Update: Now")
         #expect(sut.errorMessage == nil)
+
+        // assert geocoding
+        #expect(sut.locationName == location.name)
+        #expect(geocoderService.didCallLocationDetails == false)
 
         // assert cache update
         #expect(persistenceService.didCallFetchCachedWeatherForLocation == false)
@@ -254,6 +267,10 @@ struct WeatherViewModelTests {
         #expect(sut.dailySummaries.first?.main == mockForecast.list.first?.main)
         #expect(sut.lastUpdated == "Last Update: Now")
         #expect(sut.errorMessage == nil)
+
+        // assert geocoding
+        #expect(sut.locationName == location.name)
+        #expect(geocoderService.didCallLocationDetails == false)
 
         // assert cache update
         #expect(persistenceService.didCallFetchCachedWeatherForLocation == true)

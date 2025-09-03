@@ -139,11 +139,11 @@ struct WeatherView: View {
 }
 
 private final class MockLocationManager: UserLocationManager {
-    private let locationSubject = PassthroughSubject<CLLocationCoordinate2D?, Never>()
+    private let locationSubject = PassthroughSubject<CLLocation?, Never>()
     private let authSubject = PassthroughSubject<CLAuthorizationStatus, Never>()
     private let errorSubject = PassthroughSubject<String?, Never>()
 
-    var locationPublisher: AnyPublisher<CLLocationCoordinate2D?, Never> {
+    var locationPublisher: AnyPublisher<CLLocation?, Never> {
         locationSubject.eraseToAnyPublisher()
     }
 
@@ -162,7 +162,7 @@ private final class MockLocationManager: UserLocationManager {
 
     func requestLocation() {
         // Simulate fake location
-        locationSubject.send(CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194))
+        locationSubject.send(CLLocation(latitude: 37.7749, longitude: -122.4194))
     }
 }
 
