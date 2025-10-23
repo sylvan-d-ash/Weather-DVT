@@ -1,0 +1,57 @@
+name: iOS Unit Tests
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  tests:
+    name: Run iOS unit tests
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '16.0'
+
+      - name: Cache Swift packages
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.swiftpm
+            ~/Library/Developer/Xcode/DerivedData
+          key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
+          restore-keys: |
+            ${{ runner.os }}-spm-
+
+      - name: Install dependencies
+        run: |
+          brew install xcpretty || true
+
+      - name: Run unit tests
+        env:
+          SIMULATOR: "iPhone 16"
+          OS: "18.0"
+        run: |
+          SCHEME="Weather-DVT"
+
+          # Prefer workspace if present, otherwise use project file.
+          WORKSPACE=$(ls *.xcworkspace 2>/dev/null | head -n 1 || true)
+          PROJECT=$(ls *.xcodeproj 2>/dev/null | head -n 1 || true)
+
+          if [ -n "$WORKSPACE" ]; then
+            xcodebuild test -workspace "$WORKSPACE" -scheme "$SCHEME" \
+              -sdk iphonesimulator \
+              -destination "platform=iOS Simulator,name=${SIMULATOR},OS=${OS}" | xcpretty
+          elif [ -n "$PROJECT" ]; then
+            xcodebuild test -project "$PROJECT" -scheme "$SCHEME" \
+              -sdk iphonesimulator \
+              -destination "platform=iOS Simulator,name=${SIMULATOR},OS=${OS}" | xcpretty
+          else
+            echo "No .xcworkspace or .xcodeproj found in the repository."
+            exit 1
+          fi

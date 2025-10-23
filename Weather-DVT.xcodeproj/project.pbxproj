@@ -18,20 +18,12 @@
 			remoteGlobalIDString = 04DCD2962E59EA7500216A0D;
 			remoteInfo = "Weather-DVT";
 		};
-		04DCD2B02E59EA7700216A0D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 04DCD28F2E59EA7500216A0D /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 04DCD2962E59EA7500216A0D;
-			remoteInfo = "Weather-DVT";
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		04059B692E632AE100011811 /* Weather-DVT.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Weather-DVT.xctestplan"; sourceTree = "<group>"; };
 		04DCD2972E59EA7500216A0D /* Weather-DVT.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Weather-DVT.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		04DCD2A52E59EA7700216A0D /* Weather-DVTTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Weather-DVTTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		04DCD2AF2E59EA7700216A0D /* Weather-DVTUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Weather-DVTUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		04DCD3082E5B71CB00216A0D /* secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = secrets.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -59,11 +51,6 @@
 			path = "Weather-DVTTests";
 			sourceTree = "<group>";
 		};
-		04DCD2B22E59EA7700216A0D /* Weather-DVTUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "Weather-DVTUITests";
-			sourceTree = "<group>";
-		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,13 +68,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		04DCD2AC2E59EA7700216A0D /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -98,7 +78,6 @@
 				04DCD3082E5B71CB00216A0D /* secrets.xcconfig */,
 				04DCD2992E59EA7500216A0D /* Weather-DVT */,
 				04DCD2A82E59EA7700216A0D /* Weather-DVTTests */,
-				04DCD2B22E59EA7700216A0D /* Weather-DVTUITests */,
 				04DCD2982E59EA7500216A0D /* Products */,
 			);
 			sourceTree = "<group>";
@@ -108,7 +87,6 @@
 			children = (
 				04DCD2972E59EA7500216A0D /* Weather-DVT.app */,
 				04DCD2A52E59EA7700216A0D /* Weather-DVTTests.xctest */,
-				04DCD2AF2E59EA7700216A0D /* Weather-DVTUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -161,29 +139,6 @@
 			productReference = 04DCD2A52E59EA7700216A0D /* Weather-DVTTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		04DCD2AE2E59EA7700216A0D /* Weather-DVTUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 04DCD2BF2E59EA7700216A0D /* Build configuration list for PBXNativeTarget "Weather-DVTUITests" */;
-			buildPhases = (
-				04DCD2AB2E59EA7700216A0D /* Sources */,
-				04DCD2AC2E59EA7700216A0D /* Frameworks */,
-				04DCD2AD2E59EA7700216A0D /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				04DCD2B12E59EA7700216A0D /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				04DCD2B22E59EA7700216A0D /* Weather-DVTUITests */,
-			);
-			name = "Weather-DVTUITests";
-			packageProductDependencies = (
-			);
-			productName = "Weather-DVTUITests";
-			productReference = 04DCD2AF2E59EA7700216A0D /* Weather-DVTUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -198,10 +153,6 @@
 						CreatedOnToolsVersion = 16.3;
 					};
 					04DCD2A42E59EA7700216A0D = {
-						CreatedOnToolsVersion = 16.3;
-						TestTargetID = 04DCD2962E59EA7500216A0D;
-					};
-					04DCD2AE2E59EA7700216A0D = {
 						CreatedOnToolsVersion = 16.3;
 						TestTargetID = 04DCD2962E59EA7500216A0D;
 					};
@@ -226,7 +177,6 @@
 			targets = (
 				04DCD2962E59EA7500216A0D /* Weather-DVT */,
 				04DCD2A42E59EA7700216A0D /* Weather-DVTTests */,
-				04DCD2AE2E59EA7700216A0D /* Weather-DVTUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -241,13 +191,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		04DCD2A32E59EA7700216A0D /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		04DCD2AD2E59EA7700216A0D /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -271,13 +214,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		04DCD2AB2E59EA7700216A0D /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -285,11 +221,6 @@
 			isa = PBXTargetDependency;
 			target = 04DCD2962E59EA7500216A0D /* Weather-DVT */;
 			targetProxy = 04DCD2A62E59EA7700216A0D /* PBXContainerItemProxy */;
-		};
-		04DCD2B12E59EA7700216A0D /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 04DCD2962E59EA7500216A0D /* Weather-DVT */;
-			targetProxy = 04DCD2B02E59EA7700216A0D /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -534,48 +465,6 @@
 			};
 			name = Release;
 		};
-		04DCD2C02E59EA7700216A0D /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
-				MACOSX_DEPLOYMENT_TARGET = 15.4;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.daitensai.Weather-DVTUITests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,7";
-				TEST_TARGET_NAME = "Weather-DVT";
-				XROS_DEPLOYMENT_TARGET = 2.4;
-			};
-			name = Debug;
-		};
-		04DCD2C12E59EA7700216A0D /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
-				MACOSX_DEPLOYMENT_TARGET = 15.4;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.daitensai.Weather-DVTUITests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,7";
-				TEST_TARGET_NAME = "Weather-DVT";
-				XROS_DEPLOYMENT_TARGET = 2.4;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -602,15 +491,6 @@
 			buildConfigurations = (
 				04DCD2BD2E59EA7700216A0D /* Debug */,
 				04DCD2BE2E59EA7700216A0D /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		04DCD2BF2E59EA7700216A0D /* Build configuration list for PBXNativeTarget "Weather-DVTUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				04DCD2C02E59EA7700216A0D /* Debug */,
-				04DCD2C12E59EA7700216A0D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
